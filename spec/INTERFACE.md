@@ -6,16 +6,20 @@ The first slice is a request/response butterfly interface.
 
 | Signal | Direction | Meaning |
 |---|---|---|
-| `clk`, `rst_n` | input | synchronous clock, active-low reset |
+| `clk`, `rst_n` | input | synchronous clock and active-low synchronous reset |
 | `req_valid`, `req_ready` | handshake | one request is accepted when both are high |
 | `req_modulus_id` | input | `0`: ML-KEM `q=3329`; `1`: ML-DSA `q=8380417` |
 | `req_a`, `req_b`, `req_twiddle` | input | canonical residues in `[0,q)` |
 | `rsp_valid`, `rsp_ready` | handshake | response remains stable until accepted |
 | `rsp_a`, `rsp_b` | output | modular butterfly outputs |
-| `fault` | output | invalid modulus or non-canonical operand |
+| `rsp_fault` | output | invalid modulus or non-canonical operand |
 
-A valid request returns in 24 cycles. Invalid inputs return `fault` without
-starting arithmetic. There is one in-flight request.
+A valid request returns after exactly 24 arithmetic cycles. Invalid inputs make
+the fault response visible immediately after the acceptance edge (zero
+arithmetic cycles) without starting the multiplier. There is one in-flight
+request. While `rsp_valid && !rsp_ready`, every response bit remains stable and
+`req_ready` remains low. Reset cancels any in-flight request and clears the
+visible response state.
 
 ## Future command descriptor
 

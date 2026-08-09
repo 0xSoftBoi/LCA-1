@@ -1,31 +1,79 @@
-name: ci
+name: verification
 
 on:
   push:
+    branches: [main]
   pull_request:
+  workflow_dispatch:
 
 permissions:
   contents: read
 
+concurrency:
+  group: lca1-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PYTHONHASHSEED: "0"
+
 jobs:
-  python:
-    runs-on: ubuntu-latest
+  model-and-corpus:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12.12"
+      - name: Record Python version
+        run: python3 --version
       - name: Compile Python
-        run: python3 -m compileall -q model bench tests
-      - name: Unit tests
+        run: python3 -m compileall -q model bench tests tools
+      - name: Unit and randomized differential tests
         run: python3 -m unittest discover -s tests -v
+      - name: Check generated corpus drift
+        run: python3 tools/gen_vectors.py --check
       - name: Workload manifest smoke test
         run: python3 -m bench.bridge_profile --profile authenticated
 
-  rtl:
-    runs-on: ubuntu-latest
+  rtl-formal-synthesis:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v4
-      - name: Install Icarus Verilog
-        run: sudo apt-get update && sudo apt-get install -y iverilog
-      - name: Compile RTL
-        run: iverilog -g2012 -Wall -s tb_lca_butterfly -o rtl/simv rtl/lca_modmul.sv rtl/lca_butterfly.sv rtl/tb_lca_butterfly.sv
-      - name: Run RTL vectors
-        run: vvp rtl/simv
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+      - name: Set up Node
+        uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f # v6.1.0
+        with:
+          node-version: "24.14.0"
+          cache: npm
+      - name: Install pinned Yosys runtime
+        run: npm ci --ignore-scripts
+      - name: Install RTL simulator
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends iverilog
+      - name: Record host tool versions
+        run: |
+          mkdir -p reports
+          node --version | tee reports/node-version.txt
+          npm --version | tee reports/npm-version.txt
+          iverilog -V > reports/iverilog-version.txt 2>&1
+      - name: Full-width generated RTL regression
+        run: make rtl-test
+      - name: Formal gates
+        run: make formal
+      - name: Generic structural synthesis
+        run: make synth
+      - name: Archive verification and synthesis evidence
+        if: always()
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
+        with:
+          name: lca1-e1-evidence-${{ github.sha }}
+          path: reports/
+          if-no-files-found: warn
+          retention-days: 30

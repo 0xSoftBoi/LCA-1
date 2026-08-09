@@ -1,0 +1,7 @@
+read_verilog -sv rtl/lca_modmul.sv rtl/lca_butterfly.sv
+hierarchy -check -top lca_butterfly
+synth -top lca_butterfly
+check -assert
+tee -o reports/lca_butterfly-stat.txt stat
+write_json reports/lca_butterfly-netlist.json
+write_verilog -noattr reports/lca_butterfly-netlist.v

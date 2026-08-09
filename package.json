@@ -1,0 +1,13 @@
+{
+  "name": "lca1-hardware-toolchain",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Pinned repository-local Yosys runtime for LCA-1 verification",
+  "engines": {
+    "node": "24.14.0",
+    "npm": "11.9.0"
+  },
+  "dependencies": {
+    "@yowasp/yosys": "0.68.1207"
+  }
+}
