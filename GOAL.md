@@ -1,50 +1,68 @@
-# /goal — LCA-1 Phase 0/1
+# /goal — LCA-1 enterprise hardware program
 
 ## Outcome
 
-Turn LCA-1 from a name into an executable, falsifiable architecture program for
-the Suwappu Lattice Bridge workload.
+Turn LCA-1 from a verified arithmetic demonstrator into a deployable,
+independently reviewable ML-KEM-768 / ML-DSA-65 accelerator for the pinned ETP
+workload—without claiming a gate before its evidence exists.
 
-This phase is complete when the repository contains:
+This goal stays open until the E4 production-readiness decision. Execution and
+dependencies are tracked in the
+[LCA-1 Linear project](https://linear.app/suwappu/project/lca-1-enterprise-lattice-accelerator-b1620d4fb616).
 
-- [x] a pinned workload boundary derived from Entanglement Transfer Protocol;
-- [x] an explicit threat model and claim boundary;
-- [x] a dual-modulus architecture supporting ML-KEM-768 and ML-DSA-65 arithmetic;
-- [x] a dependency-free golden model and bridge-workload accounting tool;
-- [x] a constant-latency SystemVerilog modular multiplier and butterfly slice;
-- [x] deterministic tests for both NIST moduli;
-- [x] a power/telemetry contract that VoltForge can consume;
-- [ ] measured CPU/GPU baseline data from the real ETP crypto backend;
-- [ ] an FPGA synthesis and board-power report.
+## Earned gates
 
-The first seven items are the repository-complete gate. The final two are
-physical-evidence gates and cannot honestly be checked without the relevant
-hardware and real ML-KEM/ML-DSA backend.
+### Phase 0/1 — executable architecture baseline
 
-## Design decision
+- [x] pinned ETP workload and explicit host/accelerator boundary;
+- [x] threat model and honest non-claims;
+- [x] dual-modulus golden model and synthesizable v0 butterfly;
+- [x] power/telemetry contract connecting LCA-1 to VoltForge.
 
-LCA-1 v0 is a shared lattice-arithmetic coprocessor, not an entire bridge in
-silicon. It accelerates the arithmetic shared by:
+### E1 — enterprise engineering foundations
 
-- ML-KEM-768 encapsulation and decapsulation for sealed lattice keys; and
-- ML-DSA-65 signing and verification for commitment and relay authentication.
+- [x] requirement IDs and requirements-to-evidence traceability;
+- [x] deterministic 280-case model-to-RTL corpus with drift detection;
+- [x] exact-latency, backpressure, malformed-input, and reset RTL checks;
+- [x] bounded arithmetic/protocol/fail-closed formal proofs;
+- [x] lockfile-pinned generic synthesis and CI evidence artifacts;
+- [x] security, ownership, contribution, support, version, and PR controls;
+- [ ] owner/legal decision on license, contribution terms, and export/public-release posture ([SUW-263](https://linear.app/suwappu/issue/SUW-263)).
 
-The initial hardware slice is a constant-latency modular multiply/butterfly
-unit. It supports both NIST moduli through one 24-bit datapath. This is the
-smallest block that can be tested independently and later replicated inside an
-NTT engine.
+## Open gates
 
-## Non-goals for this phase
+### E2 — complete cryptographic datapath
 
-- claiming a complete ML-KEM or ML-DSA hardware implementation;
-- claiming FIPS 140-3 validation or CMVP status;
-- publishing speedup, power, area, or frequency numbers without artifacts;
-- replacing ETP's protocol, bridge validation, key policy, or host software;
-- treating a kernel benchmark as an end-to-end bridge result.
+- [ ] 256-coefficient NTT/INTT engine, twiddle/address schedule, and banked SRAM;
+- [ ] Keccak-f[1600], SHAKE, sampling, encoding/decoding, and packing;
+- [ ] complete ML-KEM-768 and ML-DSA-65 known-answer tests;
+- [ ] fail-closed command control, self-test, timeout, reset, and zeroization.
 
-## Next physical gate
+### E3 — host and physical integration
 
-Run the pinned real-crypto ETP workload, capture primitive and end-to-end traces,
-synthesize the RTL on a named FPGA, and measure joules per completed bridge
-operation. Only then select lane count, SRAM size, Keccak integration, and a
-candidate ASIC process.
+- [ ] versioned descriptor/completion ABI, AXI/DMA, driver, and runtime;
+- [ ] real ETP standards-conformant crypto backend with CPU/GPU baseline;
+- [ ] named FPGA P&R, closed timing, bitstream provenance, and board bring-up;
+- [ ] instrumented power traces and complete authenticated-operation comparison.
+
+### E4 — security and production qualification
+
+- [ ] timing/power/EM leakage campaign and clock/voltage fault injection;
+- [ ] reset, abort, persistence, DMA isolation, and zeroization evidence;
+- [ ] reproducible signed release and evidence index;
+- [ ] independent architecture/RTL/software/security review;
+- [ ] explicit ship/no-ship decision with residual risk and exact claims.
+
+## Non-negotiable publication rule
+
+Estimates are labeled estimates; simulation is labeled simulation; generic
+synthesis is not PPA; FPGA measurements name the board, tools, constraints,
+instrument, and uncertainty; security and FIPS claims require their actual
+independent evidence. Kernel timing is never presented as an end-to-end ETP
+result.
+
+## Next executable gate
+
+Resolve the license/release decision, then implement the scheduled NTT/INTT
+engine and a pinned real-crypto ETP baseline in parallel. Lane count, SRAM
+banking, reduction pipeline, and target device remain measurement-driven.

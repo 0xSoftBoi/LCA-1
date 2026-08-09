@@ -1,0 +1,22 @@
+read_verilog -formal -sv rtl/lca_modmul.sv formal/lca_modmul_arithmetic_formal.sv
+prep -top lca_modmul_arithmetic_formal
+flatten
+formalff -clk2ff
+chformal -lower
+sat -verify -prove-asserts -set-assumes -set-def-formal -set-def-inputs -seq 9 -set-init-zero
+
+design -reset
+read_verilog -formal -sv rtl/lca_modmul.sv formal/lca_modmul_protocol_formal.sv
+prep -top lca_modmul_protocol_formal
+flatten
+formalff -clk2ff
+chformal -lower
+sat -verify -prove-asserts -set-assumes -set-def-formal -set-def-inputs -seq 29 -set-init-zero
+
+design -reset
+read_verilog -formal -sv rtl/lca_modmul.sv rtl/lca_butterfly.sv formal/lca_butterfly_fault_formal.sv
+prep -top lca_butterfly_fault_formal
+flatten
+formalff -clk2ff
+chformal -lower
+sat -verify -prove-asserts -set-assumes -set-def-formal -set-def-inputs -seq 5 -set-init-zero
