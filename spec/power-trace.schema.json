@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/0xSoftBoi/LCA-1/spec/power-trace.schema.json",
+  "title": "LCA-1 activity and power trace",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "source", "hardware_id", "operation", "metadata", "samples"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "source": {"type": "string", "minLength": 1},
+    "hardware_id": {"type": "string", "minLength": 1},
+    "operation": {"type": "string", "minLength": 1},
+    "metadata": {"type": "object"},
+    "samples": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["timestamp_ns", "state", "active_lanes", "clock_hz", "estimated_watts", "measured_watts"],
+        "properties": {
+          "timestamp_ns": {"type": "integer", "minimum": 0},
+          "state": {"enum": ["idle", "kem", "dsa", "dma", "zeroize", "fault"]},
+          "active_lanes": {"type": "integer", "minimum": 0},
+          "clock_hz": {"type": "integer", "minimum": 1},
+          "estimated_watts": {"type": ["number", "null"], "minimum": 0},
+          "measured_watts": {"type": ["number", "null"], "minimum": 0}
+        }
+      }
+    }
+  }
+}
