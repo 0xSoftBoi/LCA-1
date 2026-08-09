@@ -80,8 +80,7 @@ module tb_lca_butterfly;
                     rsp_a !== expected_a[23:0] ||
                     rsp_b !== expected_b[23:0]) begin
                     $display(
-                        "FAIL case=%0d qid=%0d a=%0d b=%0d w=%0d "
-                        "got=(%0d,%0d,f=%0b) expected=(%0d,%0d,f=%0d)",
+                        "FAIL case=%0d qid=%0d a=%0d b=%0d w=%0d got=(%0d,%0d,f=%0b) expected=(%0d,%0d,f=%0d)",
                         case_id, modulus_id, a, b, twiddle,
                         rsp_a, rsp_b, rsp_fault,
                         expected_a, expected_b, expected_fault
