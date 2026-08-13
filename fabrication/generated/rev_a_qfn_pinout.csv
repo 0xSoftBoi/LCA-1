@@ -1,0 +1,66 @@
+package_pin,pad_name,role,nominal_voltage,notes
+1,vssa2,ground,0V,User area 2 analog ground; exact board tie per vendor drawing.
+2,gpio[25],digital_io,3.3V_IO,LCA req_ready.
+3,gpio[26],digital_io,3.3V_IO,LCA req_write.
+4,gpio[27],digital_io,3.3V_IO,LCA req_last.
+5,gpio[28],digital_io,3.3V_IO,LCA rsp_valid.
+6,gpio[29],digital_io,3.3V_IO,LCA rsp_ready.
+7,gpio[30],digital_io,3.3V_IO,LCA rsp_last.
+8,gpio[31],digital_io,3.3V_IO,LCA irq.
+9,vdda2,power,3.3V,User area 2 analog supply; treatment requires vendor confirmation.
+10,vssd2,ground,0V,User area 2 digital ground.
+11,gpio[32],digital_io,3.3V_IO,LCA tamper_n.
+12,gpio[33],digital_io,3.3V_IO,LCA zeroize_req.
+13,gpio[34],digital_io,3.3V_IO,LCA busy.
+14,gpio[35],digital_io,3.3V_IO,LCA fault.
+15,gpio[36],digital_io,3.3V_IO,LCA zeroize_busy.
+16,gpio[37],digital_io,3.3V_IO,LCA selftest_fail.
+17,vddio,power,3.3V,ESD and padframe power.
+18,vccd,power,1.8V,"Common 1.8V domain; datasheet calls this unused supply domain, vendor tie required."
+19,N/C,no_connect,none,Do not connect unless a current vendor drawing says otherwise.
+20,vssa,ground,0V,Analog ground.
+21,resetb,digital_input,3.3V_IO,"OpenFrame master reset, active low; board must define a fail-safe reset state."
+22,gpio[38],digital_io,3.3V_IO,LCA host_clk.
+23,vssd,ground,0V,"Common digital ground; datasheet calls this unused supply domain, vendor tie required."
+24,gpio[39],digital_io,3.3V_IO,Reserved and disabled in Rev-A.
+25,gpio[40],digital_io,3.3V_IO,Reserved and disabled in Rev-A.
+26,gpio[41],digital_io,3.3V_IO,Reserved and disabled in Rev-A.
+27,gpio[42],digital_io,3.3V_IO,Reserved and disabled in Rev-A.
+28,gpio[43],digital_io,3.3V_IO,Reserved and disabled in Rev-A.
+29,vssio,ground,0V,ESD and padframe ground.
+30,vdda,power,3.3V,Analog supply; exact board tie per vendor drawing.
+31,gpio[0],digital_io,3.3V_IO,LCA host_d[0]; Figure 2 controls over conflicting vssa1 text row.
+32,gpio[1],digital_io,3.3V_IO,LCA host_d[1].
+33,gpio[2],digital_io,3.3V_IO,LCA host_d[2].
+34,gpio[3],digital_io,3.3V_IO,LCA host_d[3].
+35,gpio[4],digital_io,3.3V_IO,LCA host_d[4].
+36,gpio[5],digital_io,3.3V_IO,LCA host_d[5].
+37,gpio[6],digital_io,3.3V_IO,LCA host_d[6].
+38,vssa1,ground,0V,User area 1 analog ground; Figure 2 controls over conflicting text row.
+39,vssd1,ground,0V,Rev-A user-area digital ground.
+40,vdda1,power,3.3V,User area 1 analog supply; exact board tie per vendor drawing.
+41,gpio[7],digital_io,3.3V_IO,LCA host_d[7].
+42,gpio[8],digital_io,3.3V_IO,LCA host_d[8].
+43,gpio[9],digital_io,3.3V_IO,LCA host_d[9].
+44,gpio[10],digital_io,3.3V_IO,LCA host_d[10].
+45,gpio[11],digital_io,3.3V_IO,LCA host_d[11].
+46,gpio[12],digital_io,3.3V_IO,LCA host_d[12].
+47,vdda1,power,3.3V,Second user area 1 analog supply pin.
+48,gpio[13],digital_io,3.3V_IO,LCA host_d[13].
+49,vccd1,power,1.8V,Rev-A user-area core supply.
+50,gpio[14],digital_io,3.3V_IO,LCA host_d[14].
+51,gpio[15],digital_io,3.3V_IO,LCA host_d[15].
+52,vssa1,ground,0V,Second user area 1 analog ground pin.
+53,gpio[16],digital_io,3.3V_IO,LCA host_addr[0].
+54,gpio[17],digital_io,3.3V_IO,LCA host_addr[1].
+55,gpio[18],digital_io,3.3V_IO,LCA host_addr[2].
+56,vssio,ground,0V,Second ESD and padframe ground pin.
+57,gpio[19],digital_io,3.3V_IO,LCA host_addr[3].
+58,gpio[20],digital_io,3.3V_IO,LCA host_addr[4].
+59,gpio[21],digital_io,3.3V_IO,LCA host_addr[5].
+60,gpio[22],digital_io,3.3V_IO,LCA host_addr[6].
+61,gpio[23],digital_io,3.3V_IO,LCA host_addr[7].
+62,gpio[24],digital_io,3.3V_IO,LCA req_valid.
+63,vccd2,power,1.8V,User area 2 1.8V supply; exact board tie per vendor drawing.
+64,vddio,power,3.3V,Second ESD and padframe power pin.
+EP,VSS,ground_thermal,0V,Exposed paddle; solder and thermal-via geometry require the current assembly drawing.

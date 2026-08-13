@@ -1,0 +1,12 @@
+test_id,stage,stimulus,expected,fixture,status
+PKG-001,incoming,Pin-to-pin continuity and shorts with all rails unpowered,No unintended opens/shorts against the vendor-approved 64-QFN netlist,Kelvin-capable socket or characterized pogo fixture,fixture_not_designed
+PWR-001,power_on,"Sequence grounds, 1.8V rails, then 3.3V rails while resetb remains low",No over-current; digital outputs remain benign,Current-limited programmable supplies,limits_require_post_route_power_and_vendor_data
+IF-001,functional,"Release reset, wait for zeroize_busy to clear, read ID and ABI over LCA-LINK-16",IDENTITY=0x4c434131 and ABI_VERSION=0x0001,FPGA or ATE protocol controller,host_model_required
+MEM-001,functional,Run destructive March test over every selected SRAM address,No compare errors and complete address coverage,LCA-LINK-16 controller,RTL_and_macro_model_required
+KAT-KEC,functional,Load the standard Keccak-f[1600] known-answer input and execute,All 200 output bytes match the pinned independent oracle,LCA-LINK-16 controller,vector_to_pin_sequence_required
+KAT-KEM,functional,Run ML-KEM forward and inverse NTT coefficient vectors,All 256 coefficients match the pinned oracle,LCA-LINK-16 controller,vector_to_pin_sequence_required
+KAT-DSA,functional,Run ML-DSA forward and inverse NTT coefficient vectors,All 256 coefficients match the pinned oracle,LCA-LINK-16 controller,vector_to_pin_sequence_required
+SEC-ZERO,functional,"Write nonzero patterns, assert zeroize_req and tamper_n separately, then read all addressable state",No pre-zeroize data is observable; ready remains low until scrub completes,LCA-LINK-16 controller plus tamper drive,RTL_property_and_silicon_sequence_required
+IF-BP,functional,Randomize request/response backpressure and hold rsp_ready low,"Stable response while stalled, no dropped or duplicated halfwords, no bus contention",FPGA protocol controller with contention/current monitor,cycle_accurate_host_model_required
+CHAR-VF,characterization,Sweep allowed core/I/O voltage and host clock across temperature,Map pass/fail boundary without promoting it to a production rating,Thermal chamber and programmable supplies/clock,limits_and_sample_plan_required
+CHAR-PWR,characterization,"Measure idle, NTT, Keccak, SRAM, and zeroize current profiles","Versioned per-mode traces tied to lot, unit, voltage, clock, and temperature",Synchronized current instrumentation,board_and_measurement_plan_required

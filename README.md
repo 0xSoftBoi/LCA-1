@@ -1,11 +1,11 @@
 # LCA-1
 
-> **Status: E1 enterprise foundations, not an enterprise-ready chip.** This
-> repository has an auditable arithmetic slice, generated differential
-> regression, bounded formal checks, generic synthesis, and repository
-> controls. It still has no complete ML-KEM/ML-DSA datapath, named FPGA result,
-> measured speedup, physical-security evidence, FIPS 140-3 validation, or
-> production-readiness decision.
+> **Status: E1 evidence plus a Rev-A fabrication/package contract in review.**
+> This repository has an auditable arithmetic slice, generated differential
+> regression, bounded formal checks, generic synthesis, and a machine-checked
+> OpenFrame/QFN release contract. It still has no Rev-A RTL freeze, hardened
+> user-area GDSII, target PPA, vendor acceptance, fabricated silicon, physical-
+> security evidence, FIPS 140-3 validation, or production-readiness decision.
 
 LCA-1 is an evidence-gated lattice-cryptography coprocessor program for the
 [Entanglement Transfer Protocol](https://github.com/0xSoftBoi/Entanglement-Transfer-Protocol)
@@ -26,10 +26,41 @@ host responsibilities.
 | Structural synthesis | lockfile-pinned Yosys 0.68 generic mapping, zero structural problems, archived logs/statistics/netlists |
 | Traceability | stable requirement IDs mapped to implementation and verification in `spec/REQUIREMENTS.md` |
 | Power boundary | versioned time-domain trace contract consumed by VoltForge |
+| Rev-A manufacturing contract | pinned OpenFrame route, complete 64-QFN table, all 44 logical GPIOs, pad modes, SRAM variants, assembly blockers, and 11 stable package/ATE/characterization tests |
 
 The generic cell count is a regression signal, not FPGA or ASIC area. The
 formal scope is deliberately narrower than full algorithm or physical-security
 assurance; see `spec/VERIFICATION_PLAN.md`.
+
+## Rev-A fabrication work
+
+The Rev-A proposal is an accelerator-only SKY130 OpenFrame user project. It
+removes the earlier PicoRV32, firmware ROM, 512 KiB SRAM, and whole-message
+frontend. The baseline uses 32 KiB of compiled SRAM; a 64 KiB option remains a
+separately measured experiment. The host owns complete algorithms, keys,
+protocol policy, bridge state, and chain execution.
+
+Start manufacturing review with:
+
+1. [`docs/REV_A_INTEGRATION.md`](docs/REV_A_INTEGRATION.md) - exact cut-list,
+   LCA-LINK-16 cycle contract, CSR/stream boundary, and reset/zeroize semantics;
+2. [`docs/FABRICATION_AND_PACKAGE.md`](docs/FABRICATION_AND_PACKAGE.md) - route,
+   64-QFN/package disposition, assembly package, ATE flow, and external gates;
+3. [`fabrication/rev_a_release.json`](fabrication/rev_a_release.json) -
+   machine-readable release and evidence state;
+4. [`fabrication/rev_a_package.json`](fabrication/rev_a_package.json) - complete
+   physical/logical pin map, pad policy, board defaults, tests, and blockers.
+
+Validate the source manifests and generated manufacturing tables with:
+
+```bash
+make fabrication-check
+```
+
+The package map is deliberately provisional: the pinned OpenFrame datasheet's
+Figure 2 maps pin 31 to `gpio[0]` and pin 38 to `vssa1`, while a later text row
+mistakenly includes pin 31 under `vssa1`. ChipFoundry confirmation and a current
+controlled package drawing are explicit freeze gates.
 
 ## The implemented primitive
 
@@ -59,11 +90,12 @@ make verify
 Useful individual gates:
 
 ```bash
-make test-python     # model, workload, and power-contract tests
-make vectors-check  # regenerate in memory and detect corpus drift
-make rtl-test        # 280 full-width vectors plus reset/recovery
-make formal          # three bounded SAT proofs
-make synth           # generic structural synthesis artifacts
+make test-python       # model, workload, fabrication, and power-contract tests
+make vectors-check    # regenerate in memory and detect corpus drift
+make rtl-test         # 280 full-width vectors plus reset/recovery
+make fabrication-check # release, RTL cut-list, package, GPIO, and generated CSVs
+make formal           # three bounded SAT proofs
+make synth            # generic structural synthesis artifacts
 ```
 
 CI uses immutable action commits, records tool versions, and retains the
@@ -75,26 +107,30 @@ CI uses immutable action commits, records tool versions, and retains the
 spec/          workload, requirements, architecture, threat, interface, acceptance, power
 model/         bit-exact arithmetic and power-contract reference code
 bench/         ETP workload accounting and real-backend manifest gate
-rtl/           synthesizable v0 arithmetic slice
+rtl/           synthesizable v0 arithmetic slice and Rev-A source candidates
+fabrication/   Rev-A release, package/pin/ATE contracts, schemas, generated tables
 verification/  generated corpus, format, and SystemVerilog regression
 formal/        bounded proof harnesses and Yosys SAT script
 synth/         generic structural synthesis script and claim boundary
-tools/         corpus generator and pinned Yosys runner
-tests/         Python deterministic and randomized tests
+tools/         corpus, manufacturing-artifact, validation, and pinned Yosys tools
+tests/         Python deterministic, randomized, and manufacturing-contract tests
 ```
 
 Start with:
 
-1. `GOAL.md` — the persistent program goal and earned/open gates;
-2. `spec/REQUIREMENTS.md` — exact E1 requirements and traceability;
-3. `spec/VERIFICATION_PLAN.md` — evidence layers and proof limits;
-4. `spec/THREAT_MODEL.md` — adversaries, controls, and security non-claims;
-5. `spec/ACCEPTANCE.md` — publication and physical-evidence gates.
+1. `GOAL.md` - the persistent program goal and earned/open gates;
+2. `docs/REV_A_INTEGRATION.md` - the proposed silicon boundary and shell ABI;
+3. `docs/FABRICATION_AND_PACKAGE.md` - the foundry/package handoff state;
+4. `spec/REQUIREMENTS.md` - exact E1 requirements and traceability;
+5. `spec/VERIFICATION_PLAN.md` - evidence layers and proof limits;
+6. `spec/THREAT_MODEL.md` - adversaries, controls, and security non-claims;
+7. `spec/ACCEPTANCE.md` - publication and physical-evidence gates.
 
 The execution roadmap lives in the
-[LCA-1 Linear project](https://linear.app/suwappu/project/lca-1-enterprise-lattice-accelerator-b1620d4fb616).
-E2 completes the cryptographic datapath; E3 closes host/FPGA integration and
-measurement; E4 performs physical-security and independent production review.
+[LCA-1 / Suwappu S0 Linear project](https://linear.app/suwappu/project/lca-1-suwappu-s0-trust-and-bridge-hardware-b1620d4fb616).
+T0 freezes the boundary; T1/T2 close memory and OpenFrame hardening; T3-T6
+close commercial, signoff, package, and vendor acceptance; T7 characterizes
+first silicon before any product claim.
 
 ## Grid to gate
 
@@ -113,6 +149,6 @@ trace is the contract with
 load-step, regulator-efficiency, decoupling, thermal, and protection analysis
 from measured accelerator behavior when physical data exists.
 
-No “x faster,” energy, area, frequency, production-security, certification, or
-tapeout claim belongs here without a reproducible artifact for the exact
-system boundary.
+No "x faster," energy, area, frequency, production-security, certification,
+TEE, private-inference, or tapeout claim belongs here without a reproducible
+artifact for the exact system boundary.
