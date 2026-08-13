@@ -1,0 +1,237 @@
+PYTHON ?= python3
+CC ?= cc
+CXX ?= c++
+YOSYS ?= yosys
+YOSYS_CONFIG ?= yosys-config
+ZIG ?= zig
+
+BUILD_DIR := build
+CXXRTL_DIR := $(BUILD_DIR)/cxxrtl
+FIRMWARE_DIR := $(BUILD_DIR)/firmware
+CXXRTL_RUNTIME ?= $(shell $(YOSYS_CONFIG) --datdir 2>/dev/null)/include/backends/cxxrtl/runtime
+FULLCHIP_SIM_OPT ?= -O2
+
+BRINGUP_TOP := tt_um_suwappu_lattice_accel
+BRINGUP_RTL := \
+	src/lca_modmul.v \
+	src/lca_core.v \
+	src/tt_um_suwappu_lattice_accel.v
+
+FULLCHIP_TOP := lca_chip_top
+FULLCHIP_RTL := \
+	third_party/picorv32/picorv32.v \
+	src/lca_modmul.v \
+	src/lca_core.v \
+	rtl/lca_host_frontend.sv \
+	rtl/lca_keccak_f1600.sv \
+	rtl/lca_ntt_accel.sv \
+	rtl/lca_secure_sram.sv \
+	rtl/lca_chip_top.sv
+
+PQCOMMON := third_party/PQClean/common
+MLKEM_DIR := third_party/PQClean/crypto_kem/ml-kem-768/clean
+MLDSA_DIR := third_party/PQClean/crypto_sign/ml-dsa-65/clean
+
+MLKEM_SRCS := \
+	$(MLKEM_DIR)/cbd.c \
+	$(MLKEM_DIR)/indcpa.c \
+	$(MLKEM_DIR)/kem.c \
+	$(MLKEM_DIR)/ntt.c \
+	$(MLKEM_DIR)/poly.c \
+	$(MLKEM_DIR)/polyvec.c \
+	$(MLKEM_DIR)/reduce.c \
+	$(MLKEM_DIR)/symmetric-shake.c \
+	$(MLKEM_DIR)/verify.c
+
+MLDSA_SRCS := \
+	$(MLDSA_DIR)/ntt.c \
+	$(MLDSA_DIR)/packing.c \
+	$(MLDSA_DIR)/poly.c \
+	$(MLDSA_DIR)/polyvec.c \
+	$(MLDSA_DIR)/reduce.c \
+	$(MLDSA_DIR)/rounding.c \
+	$(MLDSA_DIR)/sign.c \
+	$(MLDSA_DIR)/symmetric-shake.c
+
+PQREF_DIR := $(BUILD_DIR)/pqclean-ref
+MLKEM_REF_OBJS := $(patsubst $(MLKEM_DIR)/%.c,$(PQREF_DIR)/mlkem_%.o,$(MLKEM_SRCS))
+MLDSA_REF_OBJS := $(patsubst $(MLDSA_DIR)/%.c,$(PQREF_DIR)/mldsa_%.o,$(MLDSA_SRCS))
+PQREF_OBJS := $(PQREF_DIR)/fips202.o $(MLKEM_REF_OBJS) $(MLDSA_REF_OBJS)
+
+# Firmware replaces the two software NTT files and common/fips202.c with MMIO
+# adapters while keeping the rest of the pinned clean implementations intact.
+FIRMWARE_ALGORITHM_SRCS := \
+	$(filter-out $(MLKEM_DIR)/ntt.c,$(MLKEM_SRCS)) \
+	$(filter-out $(MLDSA_DIR)/ntt.c,$(MLDSA_SRCS))
+FIRMWARE_SRCS := \
+	firmware/start.S \
+	firmware/runtime.c \
+	firmware/main.c \
+	firmware/fips202_lca.c \
+	firmware/ntt_mmio.c \
+	$(FIRMWARE_ALGORITHM_SRCS)
+
+FIRMWARE_ELF := $(FIRMWARE_DIR)/lca_firmware.elf
+FIRMWARE_BIN := $(FIRMWARE_DIR)/lca_firmware.bin
+FIRMWARE_HEX := $(BUILD_DIR)/firmware.hex
+LCA_ZIG_GLOBAL_CACHE ?= $(abspath $(BUILD_DIR)/zig-global-cache)
+LCA_ZIG_LOCAL_CACHE ?= $(abspath $(BUILD_DIR)/zig-local-cache)
+
+FIRMWARE_CFLAGS := \
+	-target riscv32-freestanding \
+	-mcpu=generic_rv32+m+c \
+	-mabi=ilp32 \
+	-std=c99 \
+	-Os \
+	-ffreestanding \
+	-fno-builtin \
+	-fno-stack-protector \
+	-fdata-sections \
+	-ffunction-sections \
+	-DLCA_MMIO_ACCEL \
+	-Ifirmware \
+	-I$(PQCOMMON) \
+	-I$(MLKEM_DIR) \
+	-I$(MLDSA_DIR)
+FIRMWARE_LDFLAGS := \
+	-nostdlib \
+	-Wl,-T,firmware/linker.ld \
+	-Wl,--gc-sections \
+	-Wl,--build-id=none
+
+.PHONY: all test firmware test-model test-pqclean test-bringup test-datapaths \
+	test-frontend test-soc test-cocotb check check-bringup check-fullchip \
+	synth-bringup clean
+
+all: firmware check-fullchip
+
+test: firmware test-model test-pqclean test-bringup test-datapaths test-frontend test-soc check-fullchip
+
+firmware: $(FIRMWARE_HEX)
+
+test-model:
+	$(PYTHON) -m unittest discover -s test -p 'test_*.py'
+
+test-pqclean: $(BUILD_DIR)/pqclean_end_to_end
+	$<
+
+test-bringup: $(BUILD_DIR)/rtl_smoke
+	$<
+
+test-datapaths: $(CXXRTL_DIR)/fullchip_datapath_smoke
+	$<
+
+test-frontend: $(CXXRTL_DIR)/host_frontend_smoke
+	$<
+
+test-soc: $(CXXRTL_DIR)/fullchip_selftest
+	$<
+
+test-cocotb:
+	$(MAKE) -C test
+
+$(FIRMWARE_ELF): $(FIRMWARE_SRCS) firmware/linker.ld firmware/lca_mmio.h firmware/fips202.h firmware/randombytes.h
+	mkdir -p $(FIRMWARE_DIR) $(LCA_ZIG_GLOBAL_CACHE) $(LCA_ZIG_LOCAL_CACHE)
+	ZIG_GLOBAL_CACHE_DIR=$(LCA_ZIG_GLOBAL_CACHE) \
+	ZIG_LOCAL_CACHE_DIR=$(LCA_ZIG_LOCAL_CACHE) \
+	$(ZIG) cc $(FIRMWARE_CFLAGS) $(FIRMWARE_SRCS) $(FIRMWARE_LDFLAGS) -o $@
+
+$(FIRMWARE_BIN): $(FIRMWARE_ELF)
+	ZIG_GLOBAL_CACHE_DIR=$(LCA_ZIG_GLOBAL_CACHE) \
+	ZIG_LOCAL_CACHE_DIR=$(LCA_ZIG_LOCAL_CACHE) \
+	$(ZIG) objcopy -O binary $< $@
+
+$(FIRMWARE_HEX): $(FIRMWARE_BIN) tools/bin_to_memhex.py
+	$(PYTHON) tools/bin_to_memhex.py $< $@
+
+$(BUILD_DIR)/pqclean_end_to_end: test/pqclean_end_to_end.c $(PQCOMMON)/fips202.c $(MLKEM_SRCS) $(MLDSA_SRCS)
+	mkdir -p $(BUILD_DIR)
+	$(CC) -std=c99 -O2 -Wall -Wextra -Wpedantic \
+		-I$(PQCOMMON) -I$(MLKEM_DIR) -I$(MLDSA_DIR) \
+		$^ -o $@
+
+$(PQREF_DIR)/fips202.o: $(PQCOMMON)/fips202.c
+	mkdir -p $(PQREF_DIR)
+	$(CC) -std=c99 -O2 -I$(PQCOMMON) -c $< -o $@
+
+$(PQREF_DIR)/mlkem_%.o: $(MLKEM_DIR)/%.c
+	mkdir -p $(PQREF_DIR)
+	$(CC) -std=c99 -O2 -I$(PQCOMMON) -I$(MLKEM_DIR) -c $< -o $@
+
+$(PQREF_DIR)/mldsa_%.o: $(MLDSA_DIR)/%.c
+	mkdir -p $(PQREF_DIR)
+	$(CC) -std=c99 -O2 -I$(PQCOMMON) -I$(MLDSA_DIR) -c $< -o $@
+
+$(BUILD_DIR)/tt_lca.cc: $(BRINGUP_RTL)
+	mkdir -p $(BUILD_DIR)
+	$(YOSYS) -q -p 'read_verilog $(BRINGUP_RTL); hierarchy -check -top $(BRINGUP_TOP); proc; flatten; write_cxxrtl $@'
+
+$(BUILD_DIR)/rtl_smoke: $(BUILD_DIR)/tt_lca.cc test/rtl_smoke.cc
+	$(CXX) -std=c++17 -O2 -I$(BUILD_DIR) -I$(CXXRTL_RUNTIME) test/rtl_smoke.cc -o $@
+
+$(CXXRTL_DIR)/keccak.cc: rtl/lca_keccak_f1600.sv
+	mkdir -p $(CXXRTL_DIR)
+	$(YOSYS) -q -p 'read_verilog -sv $<; prep -top lca_keccak_f1600; write_cxxrtl $@'
+
+$(CXXRTL_DIR)/ntt.cc: rtl/lca_ntt_accel.sv rtl/lca_ntt_zetas.svh
+	mkdir -p $(CXXRTL_DIR)
+	$(YOSYS) -q -p 'read_verilog -sv -Irtl rtl/lca_ntt_accel.sv; prep -top lca_ntt_accel; write_cxxrtl $@'
+
+$(CXXRTL_DIR)/mldsa_ntt_ref.o: $(MLDSA_DIR)/ntt.c
+	mkdir -p $(CXXRTL_DIR)
+	$(CC) -std=c99 -O2 -I$(MLDSA_DIR) -c $< -o $@
+
+$(CXXRTL_DIR)/mldsa_reduce_ref.o: $(MLDSA_DIR)/reduce.c
+	mkdir -p $(CXXRTL_DIR)
+	$(CC) -std=c99 -O2 -I$(MLDSA_DIR) -c $< -o $@
+
+$(CXXRTL_DIR)/mlkem_ntt_ref.o: $(MLKEM_DIR)/ntt.c
+	mkdir -p $(CXXRTL_DIR)
+	$(CC) -std=c99 -O2 -I$(MLKEM_DIR) -c $< -o $@
+
+$(CXXRTL_DIR)/mlkem_reduce_ref.o: $(MLKEM_DIR)/reduce.c
+	mkdir -p $(CXXRTL_DIR)
+	$(CC) -std=c99 -O2 -I$(MLKEM_DIR) -c $< -o $@
+
+$(CXXRTL_DIR)/fullchip_datapath_smoke: \
+	test/fullchip_datapath_smoke.cc \
+	$(CXXRTL_DIR)/keccak.cc \
+	$(CXXRTL_DIR)/ntt.cc \
+	$(CXXRTL_DIR)/mldsa_ntt_ref.o \
+	$(CXXRTL_DIR)/mldsa_reduce_ref.o \
+	$(CXXRTL_DIR)/mlkem_ntt_ref.o \
+	$(CXXRTL_DIR)/mlkem_reduce_ref.o
+	$(CXX) -std=c++17 -O2 -I$(CXXRTL_DIR) -I$(CXXRTL_RUNTIME) \
+		test/fullchip_datapath_smoke.cc \
+		$(CXXRTL_DIR)/mldsa_ntt_ref.o $(CXXRTL_DIR)/mldsa_reduce_ref.o \
+		$(CXXRTL_DIR)/mlkem_ntt_ref.o $(CXXRTL_DIR)/mlkem_reduce_ref.o \
+		-o $@
+
+$(CXXRTL_DIR)/host_frontend.cc: rtl/lca_host_frontend.sv
+	mkdir -p $(CXXRTL_DIR)
+	$(YOSYS) -q -p 'read_verilog -sv $<; prep -top lca_host_frontend; write_cxxrtl $@'
+
+$(CXXRTL_DIR)/host_frontend_smoke: test/host_frontend_smoke.cc $(CXXRTL_DIR)/host_frontend.cc
+	$(CXX) -std=c++17 -O2 -I$(CXXRTL_DIR) -I$(CXXRTL_RUNTIME) $< -o $@
+
+$(CXXRTL_DIR)/chip_top.cc: $(FULLCHIP_RTL) rtl/lca_ntt_zetas.svh $(FIRMWARE_HEX)
+	mkdir -p $(CXXRTL_DIR)
+	$(YOSYS) -q -p 'read_verilog -sv -Irtl $(FULLCHIP_RTL); chparam -set ROM_WORDS 4096 $(FULLCHIP_TOP); prep -top $(FULLCHIP_TOP); write_cxxrtl $@'
+
+$(CXXRTL_DIR)/fullchip_selftest: test/fullchip_selftest.cc $(CXXRTL_DIR)/chip_top.cc $(PQREF_OBJS)
+	$(CXX) -std=c++17 $(FULLCHIP_SIM_OPT) -I$(CXXRTL_DIR) -I$(CXXRTL_RUNTIME) \
+		test/fullchip_selftest.cc $(PQREF_OBJS) -o $@
+
+check: check-bringup check-fullchip
+
+check-bringup:
+	$(YOSYS) -q -p 'read_verilog $(BRINGUP_RTL); hierarchy -check -top $(BRINGUP_TOP); proc; opt; check'
+
+check-fullchip: $(FIRMWARE_HEX)
+	$(YOSYS) -q -p 'read_verilog -sv -Irtl $(FULLCHIP_RTL); hierarchy -check -top $(FULLCHIP_TOP); proc; opt; memory_collect; check; stat'
+
+synth-bringup:
+	$(YOSYS) -p 'read_verilog $(BRINGUP_RTL); synth -top $(BRINGUP_TOP); check; stat'
+
+clean:
+	$(RM) -r $(BUILD_DIR)
