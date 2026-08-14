@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/0xSoftBoi/LCA-1/blob/main/fabrication/rev_a_package.schema.json",
+  "title": "LCA-1 Rev-A package, GPIO, assembly, and test contract",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "release_id",
+    "package_status",
+    "as_of",
+    "source_shell",
+    "package",
+    "qfn_pinout",
+    "logical_io",
+    "pad_policy",
+    "assembly_and_board",
+    "ate_tests",
+    "freeze_blockers"
+  ],
+  "properties": {
+    "$schema": {"type": "string"},
+    "schema_version": {"const": 1},
+    "release_id": {"pattern": "^LCA1-S0-REV-[A-Z]$"},
+    "package_status": {"enum": ["provisional_pending_vendor_confirmation", "vendor_confirmed", "frozen"]},
+    "as_of": {"type": "string", "format": "date"},
+    "source_shell": {"type": "object"},
+    "package": {
+      "type": "object",
+      "required": ["family", "pin_count", "body_mm", "pitch_mm", "exposed_paddle", "vendor_delivery"]
+    },
+    "qfn_pinout": {
+      "type": "array",
+      "minItems": 65,
+      "maxItems": 65,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["pin", "name", "role", "nominal_voltage", "notes"],
+        "properties": {
+          "pin": {"type": "string"},
+          "name": {"type": "string"},
+          "role": {"enum": ["digital_io", "digital_input", "power", "ground", "ground_thermal", "no_connect"]},
+          "nominal_voltage": {"type": "string"},
+          "notes": {"type": "string"}
+        }
+      }
+    },
+    "logical_io": {
+      "type": "array",
+      "minItems": 44,
+      "maxItems": 44,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["gpio", "qfn_pin", "signal", "direction", "dm", "oeb", "inp_dis", "ib_mode_sel", "vtrip_sel", "slow", "safe_state"],
+        "properties": {
+          "gpio": {"type": "integer", "minimum": 0, "maximum": 43},
+          "qfn_pin": {"type": "integer", "minimum": 1, "maximum": 64},
+          "signal": {"type": "string"},
+          "direction": {"enum": ["input", "output", "bidirectional", "disabled"]},
+          "dm": {"pattern": "^[01]{3}$"},
+          "oeb": {"oneOf": [{"type": "integer", "enum": [0, 1]}, {"type": "string"}]},
+          "inp_dis": {"type": "integer", "enum": [0, 1]},
+          "ib_mode_sel": {"type": "integer", "enum": [0, 1]},
+          "vtrip_sel": {"type": "integer", "enum": [0, 1]},
+          "slow": {"type": "integer", "enum": [0, 1]},
+          "safe_state": {"type": "string"}
+        }
+      }
+    },
+    "pad_policy": {"type": "object"},
+    "assembly_and_board": {"type": "object"},
+    "ate_tests": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "stage", "stimulus", "expected", "fixture", "status"],
+        "properties": {
+          "id": {"type": "string"},
+          "stage": {"type": "string"},
+          "stimulus": {"type": "string"},
+          "expected": {"type": "string"},
+          "fixture": {"type": "string"},
+          "status": {"type": "string"}
+        }
+      }
+    },
+    "freeze_blockers": {"type": "array", "minItems": 1, "items": {"type": "string"}}
+  }
+}

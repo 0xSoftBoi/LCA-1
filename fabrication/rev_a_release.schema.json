@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/0xSoftBoi/LCA-1/blob/main/fabrication/rev_a_release.schema.json",
+  "title": "LCA-1 Rev-A fabrication release contract",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "release_id",
+    "release_status",
+    "as_of",
+    "program",
+    "route",
+    "product_boundary",
+    "rtl_disposition",
+    "memory",
+    "shell_interface",
+    "release_gates",
+    "sources"
+  ],
+  "properties": {
+    "$schema": {"type": "string"},
+    "schema_version": {"const": 1},
+    "release_id": {"pattern": "^LCA1-S0-REV-[A-Z]$"},
+    "release_status": {"enum": ["integration_contract", "rtl_frozen", "physical_release", "vendor_accepted"]},
+    "as_of": {"type": "string", "format": "date"},
+    "program": {"type": "object"},
+    "route": {
+      "type": "object",
+      "required": ["vendor", "service", "process", "shell", "schedule", "commercial_snapshot", "required_submission"]
+    },
+    "product_boundary": {
+      "type": "object",
+      "required": ["retained_functions", "excluded_functions", "host_responsibilities", "maximum_retained_external_object_bytes", "full_algorithm_commands_supported"]
+    },
+    "rtl_disposition": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "disposition", "rev_a_netlist", "action"],
+        "properties": {
+          "path": {"pattern": "^rtl/.+\\.(sv|svh)$"},
+          "disposition": {"enum": ["retain", "modify", "replace", "remove"]},
+          "rev_a_netlist": {"type": "boolean"},
+          "action": {"type": "string", "minLength": 20}
+        }
+      }
+    },
+    "memory": {"type": "object"},
+    "shell_interface": {"type": "object"},
+    "release_gates": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "status"],
+        "properties": {
+          "id": {"pattern": "^T[0-9]+$"},
+          "name": {"type": "string"},
+          "status": {"enum": ["blocked", "in_progress", "ready_for_independent_review", "passed"]}
+        }
+      }
+    },
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["title", "url", "retrieved"],
+        "properties": {
+          "title": {"type": "string"},
+          "url": {"pattern": "^https://"},
+          "retrieved": {"type": "string", "format": "date"}
+        }
+      }
+    }
+  }
+}

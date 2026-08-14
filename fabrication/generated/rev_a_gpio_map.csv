@@ -1,0 +1,45 @@
+gpio,qfn_pin,signal,direction,dm,oeb,inp_dis,ib_mode_sel,vtrip_sel,slow,safe_state
+0,31,host_d[0],bidirectional,110,dynamic_rsp_valid,0,0,0,1,Hi-Z
+1,32,host_d[1],bidirectional,110,dynamic_rsp_valid,0,0,0,1,Hi-Z
+2,33,host_d[2],bidirectional,110,dynamic_rsp_valid,0,0,0,1,Hi-Z
+3,34,host_d[3],bidirectional,110,dynamic_rsp_valid,0,0,0,1,Hi-Z
+4,35,host_d[4],bidirectional,110,dynamic_rsp_valid,0,0,0,1,Hi-Z
+5,36,host_d[5],bidirectional,110,dynamic_rsp_valid,0,0,0,1,Hi-Z
+6,37,host_d[6],bidirectional,110,dynamic_rsp_valid,0,0,0,1,Hi-Z
+7,41,host_d[7],bidirectional,110,dynamic_rsp_valid,0,0,0,1,Hi-Z
+8,42,host_d[8],bidirectional,110,dynamic_rsp_valid,0,0,0,1,Hi-Z
+9,43,host_d[9],bidirectional,110,dynamic_rsp_valid,0,0,0,1,Hi-Z
+10,44,host_d[10],bidirectional,110,dynamic_rsp_valid,0,0,0,1,Hi-Z
+11,45,host_d[11],bidirectional,110,dynamic_rsp_valid,0,0,0,1,Hi-Z
+12,46,host_d[12],bidirectional,110,dynamic_rsp_valid,0,0,0,1,Hi-Z
+13,48,host_d[13],bidirectional,110,dynamic_rsp_valid,0,0,0,1,Hi-Z
+14,50,host_d[14],bidirectional,110,dynamic_rsp_valid,0,0,0,1,Hi-Z
+15,51,host_d[15],bidirectional,110,dynamic_rsp_valid,0,0,0,1,Hi-Z
+16,53,host_addr[0],input,001,1,0,0,0,1,external pull-down
+17,54,host_addr[1],input,001,1,0,0,0,1,external pull-down
+18,55,host_addr[2],input,001,1,0,0,0,1,external pull-down
+19,57,host_addr[3],input,001,1,0,0,0,1,external pull-down
+20,58,host_addr[4],input,001,1,0,0,0,1,external pull-down
+21,59,host_addr[5],input,001,1,0,0,0,1,external pull-down
+22,60,host_addr[6],input,001,1,0,0,0,1,external pull-down
+23,61,host_addr[7],input,001,1,0,0,0,1,external pull-down
+24,62,req_valid,input,001,1,0,0,0,1,external pull-down
+25,2,req_ready,output,110,0,1,0,0,1,0 until power-on scrub completes
+26,3,req_write,input,001,1,0,0,0,1,external pull-down
+27,4,req_last,input,001,1,0,0,0,1,external pull-down
+28,5,rsp_valid,output,110,0,1,0,0,1,0
+29,6,rsp_ready,input,001,1,0,0,0,1,external pull-down
+30,7,rsp_last,output,110,0,1,0,0,1,0
+31,8,irq,output,110,0,1,0,0,1,0
+32,11,tamper_n,input,001,1,0,0,0,1,external pull-down; disconnected means tamper asserted
+33,12,zeroize_req,input,001,1,0,0,0,1,external pull-down
+34,13,busy,output,110,0,1,0,0,1,0
+35,14,fault,output,110,0,1,0,0,1,0; sticky high after detected fault
+36,15,zeroize_busy,output,110,0,1,0,0,1,1 during power-on scrub
+37,16,selftest_fail,output,110,0,1,0,0,1,1 until self-test passes
+38,22,host_clk,input,001,1,0,0,0,1,external pull-down
+39,24,reserved[0],disabled,000,1,1,0,0,1,Hi-Z
+40,25,reserved[1],disabled,000,1,1,0,0,1,Hi-Z
+41,26,reserved[2],disabled,000,1,1,0,0,1,Hi-Z
+42,27,reserved[3],disabled,000,1,1,0,0,1,Hi-Z
+43,28,reserved[4],disabled,000,1,1,0,0,1,Hi-Z

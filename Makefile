@@ -1,11 +1,11 @@
-.PHONY: test verify test-python vectors vectors-check test-rtl rtl-test formal synth clean
+.PHONY: test verify test-python vectors vectors-check test-rtl rtl-test formal synth fabrication-check clean
 
-test: test-python vectors-check test-rtl
+test: test-python vectors-check test-rtl fabrication-check
 
 verify: test formal synth
 
 test-python:
-	python3 -m compileall -q model bench tests
+	python3 -m compileall -q model bench tests tools
 	python3 -m unittest discover -s tests -v
 	python3 -m bench.bridge_profile --profile authenticated
 
@@ -20,6 +20,10 @@ test-rtl:
 	vvp verification/simv
 
 rtl-test: test-rtl
+
+fabrication-check:
+	python3 tools/validate_fabrication.py
+	python3 tools/gen_fabrication_artifacts.py --check
 
 formal:
 	mkdir -p reports
