@@ -1,0 +1,69 @@
+# SPDX-License-Identifier: Apache-2.0
+# SKY130 hardening of the v0 arithmetic slice with LibreLane (see
+# hardening/README.md). Manual dispatch: the run downloads the PDK and takes
+# tens of minutes. Results are signoff-level open-flow estimates, not
+# silicon measurements; the container is pinned by version tag.
+name: harden
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lca1-harden-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  harden-arith-slice:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    container:
+      image: ghcr.io/librelane/librelane:3.0.9
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Record flow version
+        run: |
+          python3 -m librelane --version
+      - name: Harden lca_butterfly macro
+        working-directory: hardening/lca_butterfly
+        run: |
+          python3 -m librelane --pdk-root "$GITHUB_WORKSPACE/.ciel-pdk" --run-tag ci config.json
+      - name: Summarize headline metrics
+        working-directory: hardening/lca_butterfly
+        run: |
+          python3 - <<'EOF' | tee -a "$GITHUB_STEP_SUMMARY"
+          import json
+          from pathlib import Path
+          metrics = json.loads(Path("runs/ci/final/metrics.json").read_text())
+          keys = [
+              "design__instance__count",
+              "design__instance__area",
+              "design__die__area",
+              "timing__setup__ws",
+              "timing__hold__ws",
+              "clock__skew__worst_setup",
+              "power__total",
+              "route__drc_errors",
+              "magic__drc_error__count",
+              "design__lvs_error__count",
+          ]
+          print("## lca_butterfly SKY130 hardening (CLOCK_PERIOD constraint from config)")
+          print("| metric | value |")
+          print("|---|---|")
+          for key in keys:
+              if key in metrics:
+                  print(f"| {key} | {metrics[key]} |")
+          EOF
+      - name: Archive hardening evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: lca1-harden-${{ github.sha }}
+          path: hardening/lca_butterfly/runs/ci
+          if-no-files-found: warn
+          retention-days: 90
