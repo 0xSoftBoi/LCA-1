@@ -7,6 +7,12 @@ name: harden
 
 on:
   workflow_dispatch:
+  # Temporary bootstrap trigger: workflow_dispatch is only recognized once
+  # the workflow exists on the default branch. Removed after the first
+  # evidence run is green.
+  push:
+    branches: [claude/open-source-academic-quality-voe1k0]
+    paths: ["hardening/**", ".github/workflows/harden.yml"]
 
 permissions:
   contents: read
