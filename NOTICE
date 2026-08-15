@@ -26,6 +26,11 @@ Third-party and derived material
   (https://github.com/YosysHQ/picorv32), licensed under the ISC license; see
   the submodule's COPYING file.
 
+* verification/vectors/external/cctv_mlkem768_ntt.json contains ML-KEM-768
+  intermediate values extracted from the C2SP Community Cryptography Test
+  Vectors project (https://github.com/C2SP/CCTV), published under CC0-1.0;
+  the source file URL and its SHA-256 are recorded inside the JSON.
+
 * The pinned Yosys runtime is installed from the @yowasp/yosys npm package
   (ISC-packaged distribution of Yosys, https://yosyshq.net/yosys/), used as a
   build/verification tool and not redistributed in this repository.

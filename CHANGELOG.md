@@ -30,6 +30,25 @@ All notable changes are recorded here. Versions follow `VERSIONING.md`.
 - Issue templates: a defect report requiring the affected commit and a
   reproduction command, and a claim-boundary report for statements that
   exceed their evidence.
+- Unbounded temporal-induction proofs of the arithmetic slice's protocol
+  invariants (handshake safety, counter bound, response/fault stability)
+  with all inputs unconstrained, embedded in the RTL under `ifdef FORMAL`
+  and run by `make formal` alongside the three bounded proofs.
+- External-oracle test layer: committed C2SP/CCTV ML-KEM-768 intermediate
+  values (CC0-1.0, provenance and source hash recorded) checked against a
+  forward/inverse NTT built solely from the modeled butterfly, plus
+  independent FIPS 203/204 re-derivation of all 384 zeta ROM entries -
+  the Python model and PQClean pin are no longer the only oracles.
+- MCY mutation-coverage project for the arithmetic slice
+  (`verification/mutation/`) with a pinned nightly workflow; reported kill
+  ratio is a monitored lower-bound signal, not an E1 gate.
+- `docs/IMPROVEMENT_PLAN.md`: per-layer improvement backlog sourced from
+  papers and tools with public code and benchmarks — faster proven
+  reductions beside the shift-add slice, SRAM-backed NTT coefficients,
+  MCY mutation testing, SymbiYosys k-induction, ACVP/CCTV external oracles,
+  LibreLane hardening, an executable per-cycle power/TVLA flow, and a
+  donor-code license audit (GPL Keccak donor and Fault's non-commercial
+  ATPG engines flagged).
 - `docs/RELATED_WORK.md`: sourced August 2026 survey of academic,
   open-source, and commercial ML-KEM/ML-DSA hardware; records that the
   efabless-to-ChipFoundry operator transition left the OpenFrame route live

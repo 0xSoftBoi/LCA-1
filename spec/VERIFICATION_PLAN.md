@@ -12,8 +12,11 @@ cryptographic system.
 | RTL simulation | full-width outputs, exact latency, malformed inputs, backpressure, reset/recovery | `make rtl-test` | all 280 corpus cases and the reset case pass with no timeout |
 | Formal arithmetic | shift/add algorithm for every canonical input pair at four bits and `q=13` | `make formal` | bounded SAT proof has no counterexample |
 | Formal protocol | full 24-bit fixed response point and held response; full-width malformed-input rejection | `make formal` | both bounded SAT proofs have no counterexample |
+| Formal induction | unbounded handshake-safety, counter-bound, and response/fault-stability invariants of `lca_modmul` and `lca_butterfly` with all inputs unconstrained | `make formal` | both temporal-induction proofs close (base case plus induction step) |
+| External oracle | forward/inverse NTT built solely from the modeled butterfly against committed C2SP/CCTV ML-KEM-768 intermediate values; zeta ROM against independent FIPS 203/204 derivations | `make test-python` | CCTV transform and round-trip match; all 384 ROM entries match the FIPS-derived Montgomery-domain values |
 | Structural synthesis | elaboration, optimization, generic technology mapping, structural checks and netlist emission | `make synth` | Yosys reports zero structural problems and writes all artifacts |
 | Power contract | trace schema and energy integration behavior | `make test-python` | schema/validation and integration tests pass |
+| Mutation coverage (signal) | kill ratio of the generated corpus over injected netlist mutations of the arithmetic slice | nightly `mutation` workflow / `verification/mutation/README.md` | reported ratio is a monitored lower bound, not a gate; surviving non-equivalent mutants become corpus defects |
 
 ## Corpus design
 
@@ -42,6 +45,14 @@ dependency-free and derives expected values from `model/modarith.py`.
   arithmetic values.
 - The malformed-input proof covers the implemented wrapper's canonical-range
   rejection path.
+- The temporal-induction proofs cover protocol invariants (mutual exclusion,
+  readiness definition, counter bound, response/fault stability) for all
+  inputs and all time, but not arithmetic values; the invariants live in the
+  RTL under `ifdef FORMAL` and are invisible to synthesis and simulation.
+- The external-oracle layer anchors the butterfly schedule, twiddle
+  derivation, and zeta ROM to FIPS 203/204 definitions and independently
+  maintained CCTV data; it does not cover Keccak, sampling, or any complete
+  scheme operation.
 - None of the proofs cover a future NTT, Keccak, SRAM, entropy, DMA, driver, or
   complete ML-KEM/ML-DSA operation.
 - Digital evidence does not establish physical side-channel or fault

@@ -1,0 +1,59 @@
+# SPDX-License-Identifier: Apache-2.0
+# Nightly mutation-coverage signal (see verification/mutation/README.md).
+# This is a coverage measurement, not an E1 gate: host tool versions are
+# recorded in the log rather than lockfile-pinned. MCY itself is pinned by
+# commit.
+name: mutation
+
+on:
+  schedule:
+    - cron: "45 3 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lca1-mutation-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  mutation-coverage:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Checkout pinned MCY
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: YosysHQ/mcy
+          ref: 5a2cad0cbefceb7f23051c08348bd23128fd1046
+          path: .mcy-tool
+          persist-credentials: false
+      - name: Install host toolchain
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends yosys iverilog
+          python3 -m pip install click==8.3.1
+      - name: Record host tool versions
+        run: |
+          mkdir -p reports
+          yosys -V | tee reports/mutation-yosys-version.txt
+          iverilog -V 2>&1 | head -1 | tee reports/mutation-iverilog-version.txt
+      - name: Run mutation campaign
+        working-directory: verification/mutation
+        run: |
+          python3 "$GITHUB_WORKSPACE"/.mcy-tool/mcy.py init
+          python3 "$GITHUB_WORKSPACE"/.mcy-tool/mcy.py run -j"$(nproc)"
+          python3 "$GITHUB_WORKSPACE"/.mcy-tool/mcy.py status | tee "$GITHUB_WORKSPACE"/reports/mutation-status.txt
+      - name: Archive mutation evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: lca1-mutation-${{ github.sha }}
+          path: reports/
+          if-no-files-found: warn
+          retention-days: 30
