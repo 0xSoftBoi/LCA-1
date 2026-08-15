@@ -7,6 +7,12 @@ name: harden
 
 on:
   workflow_dispatch:
+  # Temporary while the workflow is not yet on the default branch (where
+  # workflow_dispatch registers). Removed in the commit that records the
+  # resulting measurement.
+  push:
+    branches: [claude/open-source-academic-quality-voe1k0]
+    paths: ["hardening/lca_butterfly/**", ".github/workflows/harden.yml"]
 
 permissions:
   contents: read
