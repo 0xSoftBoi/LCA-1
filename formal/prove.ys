@@ -21,3 +21,21 @@ flatten
 formalff -clk2ff
 chformal -lower
 sat -verify -prove-asserts -set-assumes -set-def-formal -set-def-inputs -seq 5 -set-init-zero
+
+# Unbounded temporal-induction proofs of the protocol invariants embedded in
+# the RTL under `ifdef FORMAL: all inputs unconstrained on every cycle. The
+# base case starts from the zero (reset) state; the invariant sets prove
+# 1-inductive, so the properties hold at all times, not up to a bound.
+design -reset
+read_verilog -formal -sv rtl/lca_modmul.sv
+prep -top lca_modmul
+flatten
+chformal -lower
+sat -tempinduct -verify -prove-asserts -set-assumes -set-init-zero -maxsteps 30
+
+design -reset
+read_verilog -formal -sv rtl/lca_modmul.sv rtl/lca_butterfly.sv
+prep -top lca_butterfly
+flatten
+chformal -lower
+sat -tempinduct -verify -prove-asserts -set-assumes -set-init-zero -maxsteps 30

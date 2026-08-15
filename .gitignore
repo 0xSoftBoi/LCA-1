@@ -8,3 +8,5 @@ node_modules/
 reports/
 verification/simv
 rtl/*.vcd
+verification/mutation/database/
+verification/mutation/tasks/
