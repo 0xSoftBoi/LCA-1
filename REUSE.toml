@@ -1,0 +1,13 @@
+version = 1
+SPDX-PackageName = "LCA-1"
+SPDX-PackageSupplier = "Suwappu Labs"
+SPDX-PackageDownloadLocation = "https://github.com/0xSoftBoi/LCA-1"
+
+# Repository-wide copyright attribution. Files that carry their own
+# SPDX-License-Identifier header keep that license; this only supplies the
+# copyright holder where a per-file header is impractical.
+[[annotations]]
+path = "**"
+precedence = "closest"
+SPDX-FileCopyrightText = "2025-2026 Suwappu Labs and the LCA-1 contributors"
+SPDX-License-Identifier = "Apache-2.0"

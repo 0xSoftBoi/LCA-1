@@ -28,6 +28,19 @@ job is necessary but not sufficient: reviewers must check that the tests still
 measure the stated requirement and that assumptions did not make the result
 vacuous.
 
-This repository currently has no declared open-source license. A public
-repository is not automatically permission to copy, modify, or redistribute;
-the owner/license decision is tracked separately.
+## License and certification of origin
+
+First-party code is licensed under the Apache License 2.0 (`LICENSE`);
+third-party and derived material is inventoried in `NOTICE`. Contributions are
+accepted under the same terms as the file they modify (inbound = outbound). By
+submitting a contribution you certify it under the
+[Developer Certificate of Origin 1.1](https://developercertificate.org/);
+sign off each commit with `git commit -s`.
+
+New first-party files must carry an `SPDX-License-Identifier` header naming
+`Apache-2.0`. Derived files must keep their upstream license, carry the
+matching SPDX identifier, and be recorded in `NOTICE` with provenance. The
+repository is kept compliant with the [REUSE](https://reuse.software)
+specification; run `reuse lint` before submitting.
+
+Participation in this project is governed by `CODE_OF_CONDUCT.md`.

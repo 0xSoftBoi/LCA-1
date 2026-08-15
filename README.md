@@ -1,5 +1,11 @@
 # LCA-1
 
+[![verification](https://github.com/0xSoftBoi/LCA-1/actions/workflows/ci.yml/badge.svg)](https://github.com/0xSoftBoi/LCA-1/actions/workflows/ci.yml)
+[![License: Apache-2.0](https://img.shields.io/badge/License-Apache--2.0-blue.svg)](LICENSE)
+[![REUSE status](https://api.reuse.software/badge/github.com/0xSoftBoi/LCA-1)](https://api.reuse.software/info/github.com/0xSoftBoi/LCA-1)
+[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/0xSoftBoi/LCA-1/badge)](https://scorecard.dev/viewer/?uri=github.com/0xSoftBoi/LCA-1)
+[![Cite this repository](https://img.shields.io/badge/cite-CITATION.cff-green.svg)](CITATION.cff)
+
 > **Status: E1 evidence plus a Rev-A fabrication/package contract in review.**
 > This repository has an auditable arithmetic slice, generated differential
 > regression, bounded formal checks, generic synthesis, and a machine-checked
@@ -124,7 +130,29 @@ Start with:
 4. `spec/REQUIREMENTS.md` - exact E1 requirements and traceability;
 5. `spec/VERIFICATION_PLAN.md` - evidence layers and proof limits;
 6. `spec/THREAT_MODEL.md` - adversaries, controls, and security non-claims;
-7. `spec/ACCEPTANCE.md` - publication and physical-evidence gates.
+7. `spec/ACCEPTANCE.md` - publication and physical-evidence gates;
+8. `docs/REFERENCES.md` - the standards, literature, and tooling the design
+   traces to;
+9. `docs/RELATED_WORK.md` - the surveyed PQC-hardware landscape and the
+   narrower position this program defends.
+
+## License, adoption, and citation
+
+First-party code is licensed under [Apache-2.0](LICENSE), chosen for its
+explicit patent grant so integrators, foundry partners, and commercial
+adopters can evaluate and build on this work without a separate agreement.
+Third-party and derived material (PQClean-derived FIPS 202 code, the PQClean
+and PicoRV32 submodules) keeps its own terms, inventoried in [NOTICE](NOTICE).
+Contributions follow inbound = outbound with DCO sign-off; see
+[CONTRIBUTING.md](CONTRIBUTING.md) and [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md).
+
+The license is a copyright/patent grant, not a fitness claim: the security and
+production boundaries in `SECURITY.md` and `spec/THREAT_MODEL.md` still apply
+to every use.
+
+For academic use, cite via [`CITATION.cff`](CITATION.cff) (GitHub's "Cite this
+repository") and pin the exact commit, since every claim here is bounded per
+commit.
 
 The execution roadmap lives in the
 [LCA-1 / Suwappu S0 Linear project](https://linear.app/suwappu/project/lca-1-suwappu-s0-trust-and-bridge-hardware-b1620d4fb616).

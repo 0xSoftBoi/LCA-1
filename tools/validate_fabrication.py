@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# SPDX-License-Identifier: Apache-2.0
 """Semantic validation for the LCA-1 Rev-A fabrication release.
 
 This intentionally uses only the Python standard library so it can run before

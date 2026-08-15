@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Report a security vulnerability (private)
+    url: https://github.com/0xSoftBoi/LCA-1/security/advisories/new
+    about: Use GitHub's private reporting flow per SECURITY.md; never open a public issue for an unpatched vulnerability.
+  - name: Support boundaries
+    url: https://github.com/0xSoftBoi/LCA-1/blob/main/SUPPORT.md
+    about: What is and is not supported, and where questions go.

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Account for LCA-relevant work in one ETP bridge operation.
 
 The tool intentionally accepts measured primitive data rather than embedding

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
 #ifndef LCA_FREESTANDING_STRING_H
 #define LCA_FREESTANDING_STRING_H
 

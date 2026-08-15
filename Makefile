@@ -1,4 +1,4 @@
-.PHONY: test verify test-python vectors vectors-check test-rtl rtl-test formal synth fabrication-check clean
+.PHONY: test verify test-python vectors vectors-check test-rtl rtl-test formal synth fabrication-check reuse-lint clean
 
 test: test-python vectors-check test-rtl fabrication-check
 
@@ -20,6 +20,9 @@ test-rtl:
 	vvp verification/simv
 
 rtl-test: test-rtl
+
+reuse-lint:
+	reuse lint
 
 fabrication-check:
 	python3 tools/validate_fabrication.py

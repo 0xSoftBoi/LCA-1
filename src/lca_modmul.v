@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
 `default_nettype none
 
 // LCA-1 constant-iteration modular multiplier.

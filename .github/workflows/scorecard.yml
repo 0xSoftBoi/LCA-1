@@ -1,0 +1,40 @@
+# SPDX-License-Identifier: Apache-2.0
+# OpenSSF Scorecard supply-chain health analysis. Results are published to
+# the OpenSSF API for the public badge; the SARIF artifact is retained with
+# the run so findings stay reviewable without extra permissions.
+name: scorecard
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "30 2 * * 1"
+  workflow_dispatch:
+
+permissions: read-all
+
+jobs:
+  analysis:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      # Required by ossf/scorecard-action to publish results for the badge.
+      id-token: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Run OpenSSF Scorecard analysis
+        uses: ossf/scorecard-action@2d1146689b8cda280b9bc96326124645441f03bc # v2.4.4
+        with:
+          results_file: scorecard.sarif
+          results_format: sarif
+          publish_results: true
+      - name: Archive scorecard results
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: scorecard-results-${{ github.sha }}
+          path: scorecard.sarif
+          retention-days: 30

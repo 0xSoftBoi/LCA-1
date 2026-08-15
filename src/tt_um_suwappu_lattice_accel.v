@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
 `default_nettype none
 
 // Tiny Tapeout wrapper for Suwappu LCA-1.

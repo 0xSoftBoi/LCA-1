@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# SPDX-License-Identifier: Apache-2.0
 """Generate the deterministic LCA-1 butterfly RTL regression corpus."""
 
 from __future__ import annotations

@@ -1,0 +1,56 @@
+name: Defect report
+description: A reproducible defect in the model, RTL, tools, specs, or evidence chain
+labels: ["defect"]
+body:
+  - type: markdown
+    attributes:
+      value: >
+        Evidence over prose: a defect report needs the exact commit and a
+        command someone else can run. Security-sensitive issues go through
+        the private vulnerability-reporting flow in SECURITY.md, not here.
+  - type: input
+    id: commit
+    attributes:
+      label: Affected commit
+      description: Full SHA the defect reproduces at (claims are bounded per commit).
+      placeholder: "e.g. 3968581…"
+    validations:
+      required: true
+  - type: dropdown
+    id: component
+    attributes:
+      label: Component
+      options:
+        - model (Python reference)
+        - rtl (synthesizable sources)
+        - verification (corpus / testbench)
+        - formal (proof harnesses / scope)
+        - synth (synthesis scripts / claims)
+        - fabrication (release / package contracts)
+        - firmware
+        - tools / CI
+        - spec / docs (claim exceeds evidence)
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Reproduction command
+      description: Exact command(s) and environment (Python/Node/tool versions).
+      render: shell
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected versus actual
+      description: >
+        What the spec/requirement says should happen (cite the requirement ID
+        from spec/REQUIREMENTS.md where possible) and what actually happens.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Logs and evidence
+      description: Raw output, waveforms, or report excerpts. Do not attach secrets or keys.

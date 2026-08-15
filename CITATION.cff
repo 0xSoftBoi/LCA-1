@@ -1,0 +1,50 @@
+cff-version: 1.2.0
+message: >-
+  If you use LCA-1, its verification corpus, or its evidence methodology in
+  academic work, please cite it as below.
+title: "LCA-1: an evidence-gated lattice-cryptography coprocessor"
+type: software
+authors:
+  - name: "Suwappu Labs"
+repository-code: "https://github.com/0xSoftBoi/LCA-1"
+license: Apache-2.0
+version: 0.1.0
+date-released: "2026-08-15"
+keywords:
+  - post-quantum cryptography
+  - ML-KEM
+  - ML-DSA
+  - number-theoretic transform
+  - modular arithmetic
+  - hardware accelerator
+  - ASIC
+  - SKY130
+  - formal verification
+abstract: >-
+  LCA-1 is an evidence-gated hardware program implementing the modular
+  arithmetic shared by ML-KEM-768 (FIPS 203) and ML-DSA-65 (FIPS 204). The
+  repository contains a bit-exact reference model, synthesizable
+  constant-iteration RTL, a deterministic differential regression corpus,
+  bounded formal proofs, generic synthesis evidence, and a machine-checked
+  SKY130 OpenFrame fabrication and package release contract. Claims are
+  bounded by reproducible artifacts; no performance, area, or
+  physical-security claim is made without one.
+references:
+  - type: standard
+    title: "FIPS 203: Module-Lattice-Based Key-Encapsulation Mechanism Standard"
+    authors:
+      - name: "National Institute of Standards and Technology"
+    year: 2024
+    doi: 10.6028/NIST.FIPS.203
+  - type: standard
+    title: "FIPS 204: Module-Lattice-Based Digital Signature Standard"
+    authors:
+      - name: "National Institute of Standards and Technology"
+    year: 2024
+    doi: 10.6028/NIST.FIPS.204
+  - type: standard
+    title: "FIPS 202: SHA-3 Standard: Permutation-Based Hash and Extendable-Output Functions"
+    authors:
+      - name: "National Institute of Standards and Technology"
+    year: 2015
+    doi: 10.6028/NIST.FIPS.202
