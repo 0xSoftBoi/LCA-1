@@ -42,6 +42,15 @@ All notable changes are recorded here. Versions follow `VERSIONING.md`.
 - MCY mutation-coverage project for the arithmetic slice
   (`verification/mutation/`) with a pinned nightly workflow; reported kill
   ratio is a monitored lower-bound signal, not an E1 gate.
+- `docs/DEPIN_LANDSCAPE.md`: primary-source survey of the DePIN market —
+  device-identity and secure-element practice, confidential-compute
+  attestation patterns, hardware maker programs, and post-quantum posture
+  across the chains these networks settle on. Records an explicitly
+  **negative** near-term assessment of the market for hardware PQC
+  acceleration, the non-claims that follow from it, the one structural
+  problem the evidence does support (non-rotatable classical device keys in
+  decade-lifetime infrastructure), and falsifiable triggers that would change
+  the conclusion.
 - `docs/IMPROVEMENT_PLAN.md`: per-layer improvement backlog sourced from
   papers and tools with public code and benchmarks — faster proven
   reductions beside the shift-add slice, SRAM-backed NTT coefficients,

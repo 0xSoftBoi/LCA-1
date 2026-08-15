@@ -136,7 +136,10 @@ Start with:
 9. `docs/RELATED_WORK.md` - the surveyed PQC-hardware landscape and the
    narrower position this program defends;
 10. `docs/IMPROVEMENT_PLAN.md` - the artifact-backed, per-layer improvement
-    backlog with sequencing and donor-license audit.
+    backlog with sequencing and donor-license audit;
+11. `docs/DEPIN_LANDSCAPE.md` - the surveyed DePIN market, its device-identity
+    and attestation patterns, and an explicitly negative assessment of the
+    near-term market for hardware post-quantum acceleration.
 
 ## License, adoption, and citation
 
