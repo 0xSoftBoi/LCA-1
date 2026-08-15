@@ -30,6 +30,13 @@ All notable changes are recorded here. Versions follow `VERSIONING.md`.
 - Issue templates: a defect report requiring the affected commit and a
   reproduction command, and a claim-boundary report for statements that
   exceed their evidence.
+- `docs/RELATED_WORK.md`: sourced August 2026 survey of academic,
+  open-source, and commercial ML-KEM/ML-DSA hardware; records that the
+  efabless-to-ChipFoundry operator transition left the OpenFrame route live
+  with scheduled 2026 shuttles, that the pinned PQClean oracle was archived
+  read-only on 2026-08-04 (pin unaffected; successor projects named for any
+  future oracle refresh), and the narrower positioning the evidence
+  supports.
 
 ### Fixed
 

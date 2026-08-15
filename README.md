@@ -132,7 +132,9 @@ Start with:
 6. `spec/THREAT_MODEL.md` - adversaries, controls, and security non-claims;
 7. `spec/ACCEPTANCE.md` - publication and physical-evidence gates;
 8. `docs/REFERENCES.md` - the standards, literature, and tooling the design
-   traces to.
+   traces to;
+9. `docs/RELATED_WORK.md` - the surveyed PQC-hardware landscape and the
+   narrower position this program defends.
 
 ## License, adoption, and citation
 
