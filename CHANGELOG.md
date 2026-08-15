@@ -30,6 +30,13 @@ All notable changes are recorded here. Versions follow `VERSIONING.md`.
 - Issue templates: a defect report requiring the affected commit and a
   reproduction command, and a claim-boundary report for statements that
   exceed their evidence.
+- `docs/IMPROVEMENT_PLAN.md`: per-layer improvement backlog sourced from
+  papers and tools with public code and benchmarks — faster proven
+  reductions beside the shift-add slice, SRAM-backed NTT coefficients,
+  MCY mutation testing, SymbiYosys k-induction, ACVP/CCTV external oracles,
+  LibreLane hardening, an executable per-cycle power/TVLA flow, and a
+  donor-code license audit (GPL Keccak donor and Fault's non-commercial
+  ATPG engines flagged).
 - `docs/RELATED_WORK.md`: sourced August 2026 survey of academic,
   open-source, and commercial ML-KEM/ML-DSA hardware; records that the
   efabless-to-ChipFoundry operator transition left the OpenFrame route live
