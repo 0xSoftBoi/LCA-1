@@ -37,8 +37,10 @@ submitting a contribution you certify it under the
 [Developer Certificate of Origin 1.1](https://developercertificate.org/);
 sign off each commit with `git commit -s`.
 
-New first-party files must carry an `SPDX-License-Identifier: Apache-2.0`
-header. Derived files must keep their upstream license, carry the matching
-SPDX identifier, and be recorded in `NOTICE` with provenance.
+New first-party files must carry an `SPDX-License-Identifier` header naming
+`Apache-2.0`. Derived files must keep their upstream license, carry the
+matching SPDX identifier, and be recorded in `NOTICE` with provenance. The
+repository is kept compliant with the [REUSE](https://reuse.software)
+specification; run `reuse lint` before submitting.
 
 Participation in this project is governed by `CODE_OF_CONDUCT.md`.

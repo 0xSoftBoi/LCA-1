@@ -22,6 +22,21 @@ All notable changes are recorded here. Versions follow `VERSIONING.md`.
   (normative standards, algorithm and arithmetic literature, implementation
   baselines, tooling), Contributor Covenant 2.1 code of conduct, and
   DCO sign-off policy in `CONTRIBUTING.md`.
+- REUSE 3.3 compliance (`REUSE.toml`, `LICENSES/`, pinned `reuse lint` CI job,
+  `make reuse-lint`) so every file carries machine-readable license and
+  copyright information.
+- OpenSSF Scorecard workflow (commit-pinned, minimal permissions) and README
+  badges for REUSE and Scorecard status.
+- Issue templates: a defect report requiring the affected commit and a
+  reproduction command, and a claim-boundary report for statements that
+  exceed their evidence.
+
+### Fixed
+
+- `docs/REFERENCES.md`: the Longa–Naehrig CANS 2016 DOI pointed at a
+  different paper in the same LNCS volume; corrected to
+  `10.1007/978-3-319-48965-0_8` (all other entries verified against
+  Crossref/DOI/NIST records).
 
 ### Boundaries
 

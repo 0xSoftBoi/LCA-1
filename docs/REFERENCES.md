@@ -39,8 +39,8 @@ that depends on external work should trace to an entry below.
 8. J. W. Cooley and J. W. Tukey. "An Algorithm for the Machine Calculation of
    Complex Fourier Series." *Mathematics of Computation*, 19(90):297–301,
    1965. <https://doi.org/10.1090/S0025-5718-1965-0178586-1>
-9. W. M. Gentleman and G. Sande. "Fast Fourier Transforms: For Fun and
-   Profit." *AFIPS Fall Joint Computer Conference*, 1966.
+9. W. M. Gentleman and G. Sande. "Fast Fourier Transforms — for Fun and
+   Profit." *AFIPS Fall Joint Computer Conference*, pp. 563–578, 1966.
    <https://doi.org/10.1145/1464291.1464352>
 10. P. L. Montgomery. "Modular Multiplication Without Trial Division."
     *Mathematics of Computation*, 44(170):519–521, 1985.
@@ -51,8 +51,8 @@ that depends on external work should trace to an entry below.
     <https://doi.org/10.1007/3-540-47721-7_24>
 12. P. Longa and M. Naehrig. "Speeding up the Number Theoretic Transform for
     Faster Ideal Lattice-Based Cryptography." *Cryptology and Network
-    Security (CANS)*, LNCS 10052, 2016.
-    <https://doi.org/10.1007/978-3-319-48965-0_31>
+    Security (CANS)*, LNCS 10052, pp. 124–139, 2016.
+    <https://doi.org/10.1007/978-3-319-48965-0_8>
 
 ## Side-channel adversary model
 

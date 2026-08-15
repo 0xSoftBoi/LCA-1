@@ -2,6 +2,8 @@
 
 [![verification](https://github.com/0xSoftBoi/LCA-1/actions/workflows/ci.yml/badge.svg)](https://github.com/0xSoftBoi/LCA-1/actions/workflows/ci.yml)
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache--2.0-blue.svg)](LICENSE)
+[![REUSE status](https://api.reuse.software/badge/github.com/0xSoftBoi/LCA-1)](https://api.reuse.software/info/github.com/0xSoftBoi/LCA-1)
+[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/0xSoftBoi/LCA-1/badge)](https://scorecard.dev/viewer/?uri=github.com/0xSoftBoi/LCA-1)
 [![Cite this repository](https://img.shields.io/badge/cite-CITATION.cff-green.svg)](CITATION.cff)
 
 > **Status: E1 evidence plus a Rev-A fabrication/package contract in review.**

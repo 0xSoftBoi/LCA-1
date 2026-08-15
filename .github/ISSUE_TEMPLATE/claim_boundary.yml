@@ -1,0 +1,41 @@
+name: Claim-boundary report
+description: A statement in this repository claims more than its evidence supports
+labels: ["claim-boundary"]
+body:
+  - type: markdown
+    attributes:
+      value: >
+        This project treats an overstated claim as a defect even when the code
+        is correct. If a README, spec, comment, or generated report implies
+        performance, security, coverage, or readiness that no artifact backs,
+        report it here.
+  - type: input
+    id: location
+    attributes:
+      label: Where the claim appears
+      description: File and line (or doc section) at a specific commit.
+      placeholder: "README.md:27 at 3968581…"
+    validations:
+      required: true
+  - type: textarea
+    id: claim
+    attributes:
+      label: The claim as written
+      description: Quote it exactly.
+    validations:
+      required: true
+  - type: textarea
+    id: gap
+    attributes:
+      label: Why the evidence does not support it
+      description: >
+        Name the missing or narrower artifact — e.g. the formal scope is
+        reduced-width, the synthesis is generic mapping not ASIC area, the
+        test never exercises the stated case.
+    validations:
+      required: true
+  - type: textarea
+    id: fix
+    attributes:
+      label: Proposed correction
+      description: Either the evidence that would justify the claim, or the narrower wording.
