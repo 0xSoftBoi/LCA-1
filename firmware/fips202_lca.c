@@ -1,3 +1,4 @@
+/* SPDX-License-Identifier: CC0-1.0 */
 /* LCA-1 adaptation of the PQClean FIPS 202 implementation.
  *
  * The original permutation remains below for host differential tests. A

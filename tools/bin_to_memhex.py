@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# SPDX-License-Identifier: Apache-2.0
 """Convert a little-endian firmware binary to one 32-bit readmemh word/line."""
 
 from __future__ import annotations

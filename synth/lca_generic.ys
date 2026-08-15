@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 read_verilog -sv rtl/lca_modmul.sv rtl/lca_butterfly.sv
 hierarchy -check -top lca_butterfly
 synth -top lca_butterfly

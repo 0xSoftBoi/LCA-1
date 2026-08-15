@@ -1,0 +1,31 @@
+LCA-1
+Copyright 2025-2026 Suwappu Labs and the LCA-1 contributors
+
+First-party files in this repository are licensed under the Apache License,
+Version 2.0 (see LICENSE). Individual files carry SPDX-License-Identifier
+headers. The Apache-2.0 grant covers first-party files only; third-party and
+derived material retains its own terms, recorded below.
+
+Third-party and derived material
+--------------------------------
+
+* firmware/fips202_lca.c and firmware/fips202.h are derived from the FIPS 202
+  implementation in the PQClean project (https://github.com/PQClean/PQClean),
+  itself based on the public-domain implementation in
+  crypto_hash/keccakc512/simple/ from SUPERCOP (http://bench.cr.yp.to/supercop.html)
+  by Ronny Van Keer, and the public-domain "TweetFips202" implementation by
+  Gilles Van Assche, Daniel J. Bernstein, and Peter Schwabe. These portions are
+  public domain (CC0-1.0).
+
+* third_party/PQClean is a git submodule of the PQClean project
+  (https://github.com/PQClean/PQClean). PQClean code is licensed per scheme,
+  predominantly CC0-1.0 with some MIT and Apache-2.0 components; see the
+  LICENSE files inside the submodule.
+
+* third_party/picorv32 is a git submodule of YosysHQ PicoRV32
+  (https://github.com/YosysHQ/picorv32), licensed under the ISC license; see
+  the submodule's COPYING file.
+
+* The pinned Yosys runtime is installed from the @yowasp/yosys npm package
+  (ISC-packaged distribution of Yosys, https://yosyshq.net/yosys/), used as a
+  build/verification tool and not redistributed in this repository.

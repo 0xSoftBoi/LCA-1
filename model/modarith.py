@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Bit-exact reference model for the first LCA-1 RTL slice.
 
 This is not an ML-KEM or ML-DSA implementation. It models the shared modular

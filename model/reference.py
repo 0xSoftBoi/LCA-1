@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Dependency-free LCA-1 arithmetic reference model.
 
 The functions here are deliberately small and boring. They are an executable

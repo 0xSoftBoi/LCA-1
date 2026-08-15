@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 read_verilog -formal -sv rtl/lca_modmul.sv formal/lca_modmul_arithmetic_formal.sv
 prep -top lca_modmul_arithmetic_formal
 flatten

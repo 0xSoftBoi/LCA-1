@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Power-trace contract between LCA-1 and VoltForge.
 
 The model integrates calibrated or measured samples. It intentionally ships no

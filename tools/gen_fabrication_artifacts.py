@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# SPDX-License-Identifier: Apache-2.0
 """Generate deterministic package and ATE CSVs from the Rev-A JSON contract."""
 
 from __future__ import annotations
