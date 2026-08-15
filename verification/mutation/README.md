@@ -40,6 +40,33 @@ python3 /path/to/mcy/mcy.py run -j"$(nproc)"
 python3 /path/to/mcy/mcy.py status
 ```
 
-The `database/` directory is generated state and is not committed. CI runs
-this project nightly (`.github/workflows/mutation.yml`) and uploads the
-report as an artifact.
+The `database/` and `tasks/` directories are generated state and are not
+committed. CI runs this project nightly (`.github/workflows/mutation.yml`)
+and uploads the report as an artifact.
+
+## First measured campaign
+
+Measured 2026-08-15 in the development container (Yosys 0.33, Icarus
+Verilog 12.0, MCY commit `5a2cad0`, 200 mutations of the synthesized
+flattened `lca_butterfly` + `lca_modmul` netlist, full 280-case corpus per
+mutant):
+
+```text
+Corpus mutation coverage: 94.50% (189/200 killed)
+```
+
+Survivor characterization (11 total):
+
+- 1 is the `-mode none` unmutated baseline, which survives by
+  construction and is counted against coverage only because no
+  equivalence filter is configured yet;
+- `modulus` bit 0 stuck-at-1 and `multiplicand` bit 23 stuck-at-0 are
+  equivalent mutants: both supported moduli are odd, and both are below
+  2^23, so those bits are constant in every reachable state;
+- four inversions of individual `count` flip-flop slices and three
+  post-ABC gate mutations are **open corpus-gap candidates**: they are
+  treated as potential defects until the planned sby equivalence filter
+  classifies them as equivalent or a corpus extension kills them.
+
+The measured ratio is a lower bound; re-measure after any corpus or RTL
+change rather than quoting this number for a different commit.
