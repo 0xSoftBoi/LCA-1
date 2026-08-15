@@ -25,20 +25,24 @@ jobs:
   harden-arith-slice:
     runs-on: ubuntu-24.04
     timeout-minutes: 90
-    container:
-      image: ghcr.io/librelane/librelane:3.0.9
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+      # The LibreLane image is Nix-based, so GitHub's Node-based actions
+      # cannot execute inside it as a job container; the flow runs via
+      # docker run instead, with the workspace bind-mounted.
       - name: Record flow version
         run: |
-          python3 -m librelane --version
+          docker run --rm ghcr.io/librelane/librelane:3.0.9 \
+            python3 -m librelane --version
       - name: Harden lca_butterfly macro
-        working-directory: hardening/lca_butterfly
         run: |
-          python3 -m librelane --pdk-root "$GITHUB_WORKSPACE/.ciel-pdk" --run-tag ci config.json
+          docker run --rm -v "$GITHUB_WORKSPACE":/work \
+            -w /work/hardening/lca_butterfly \
+            ghcr.io/librelane/librelane:3.0.9 \
+            python3 -m librelane --pdk-root /work/.ciel-pdk --run-tag ci config.json
       - name: Summarize headline metrics
         working-directory: hardening/lca_butterfly
         run: |
