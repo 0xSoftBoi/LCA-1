@@ -1,0 +1,43 @@
+# SPDX-License-Identifier: Apache-2.0
+#
+# Standalone unbounded proof for rtl/lca_modmul_fast.sv.
+#
+# Run with the repository's pinned Yosys:
+#
+#   node --experimental-wasm-exnref tools/run_yosys.mjs \
+#       -s formal/lca_modmul_fast_formal.ys
+#
+# This script is deliberately NOT wired into `make formal`: the fast
+# multiplier is not part of the E1 evidence chain yet (see
+# docs/FAST_REDUCTION.md). formal/prove.ys is left byte-identical.
+#
+# What is proven, by temporal induction with every input unconstrained on
+# every cycle and the base case starting from the zero (reset) state, so the
+# properties hold at all times rather than up to a bound:
+#
+#   P1  req_ready is exactly the pipeline-advance condition;
+#   P2  an unaccepted response holds valid with an identical fault flag and
+#       product for as long as reset stays deasserted;
+#   P3  back-pressure freezes every pipeline register, so no in-flight
+#       request is dropped, reordered or corrupted by a stall;
+#   P4  a faulting response carries a zero product - fail closed;
+#   A1  the ML-KEM stage-B result is canonical for q=3329 over the whole
+#       2**24 product domain;
+#   A2  the ML-KEM stage-C result is canonical for q=3329 over every 12-bit
+#       stage-2 payload;
+#   A3  the ML-DSA stage-C result is canonical for q=8380417 over every one
+#       of the 2**48 possible stage-2 payloads, i.e. the four-fold Solinas
+#       bound chain is proven at full width;
+#   A4  the registered response product is canonical for the modulus that
+#       produced it.
+#
+# A1-A4 are range proofs. Congruence to (a*b) mod q is NOT proven here; that
+# is simulation and model evidence (exhaustive for q=3329 in
+# tests/test_fastmod.py, randomized plus boundary for q=8380417).
+
+design -reset
+read_verilog -formal -sv rtl/lca_modmul_fast.sv
+prep -top lca_modmul_fast
+flatten
+chformal -lower
+sat -tempinduct -verify -prove-asserts -set-assumes -set-init-zero -maxsteps 30

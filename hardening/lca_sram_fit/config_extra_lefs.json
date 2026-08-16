@@ -1,0 +1,44 @@
+{
+  "meta": {
+    "version": 2
+  },
+  "DESIGN_NAME": "lca_sram_fit",
+  "PDK": "sky130A",
+  "STD_CELL_LIBRARY": "sky130_fd_sc_hd",
+  "VERILOG_FILES": [
+    "dir::lca_sram_fit.sv"
+  ],
+  "EXTRA_VERILOG_MODELS": [
+    "dir::sky130_sram_2kbyte_1rw1r_32x512_8.vh"
+  ],
+  "EXTRA_LEFS": [
+    "pdk_dir::libs.ref/sky130_sram_macros/lef/sky130_sram_2kbyte_1rw1r_32x512_8.lef"
+  ],
+  "EXTRA_GDS_FILES": [
+    "pdk_dir::libs.ref/sky130_sram_macros/gds/sky130_sram_2kbyte_1rw1r_32x512_8.gds"
+  ],
+  "EXTRA_LIBS": [
+    "pdk_dir::libs.ref/sky130_sram_macros/lib/sky130_sram_2kbyte_1rw1r_32x512_8_TT_1p8V_25C.lib"
+  ],
+  "CLOCK_PORT": "clk",
+  "CLOCK_PERIOD": 14,
+  "FP_SIZING": "absolute",
+  "DIE_AREA": [
+    0,
+    0,
+    3060,
+    2230
+  ],
+  "CORE_AREA": [
+    50,
+    50,
+    3010,
+    2180
+  ],
+  "FP_MACRO_HORIZONTAL_HALO": 20,
+  "FP_MACRO_VERTICAL_HALO": 20,
+  "PL_TARGET_DENSITY_PCT": 35,
+  "PDN_MACRO_CONNECTIONS": [
+    "u_bank\\[[0-9]+\\] VPWR VGND vccd1 vssd1"
+  ]
+}
