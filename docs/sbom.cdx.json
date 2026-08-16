@@ -1,0 +1,1475 @@
+{
+  "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
+  "bomFormat": "CycloneDX",
+  "components": [
+    {
+      "bom-ref": "action/actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8",
+      "description": "GitHub Action pinned to a commit SHA (v4.2.2)",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://github.com/actions/attest-build-provenance"
+        }
+      ],
+      "group": "actions",
+      "licenses": [
+        {
+          "license": {
+            "name": "NOASSERTION"
+          }
+        }
+      ],
+      "name": "attest-build-provenance",
+      "properties": [
+        {
+          "name": "lca1:action:pinned-by",
+          "value": "full commit SHA"
+        },
+        {
+          "name": "lca1:action:release-tag",
+          "value": "v4.2.2"
+        },
+        {
+          "name": "lca1:license:noassertion-reason",
+          "value": "action licenses are not inventoried in NOTICE; the action is executed by GitHub, not redistributed here"
+        },
+        {
+          "name": "lca1:role",
+          "value": "ci-action"
+        },
+        {
+          "name": "lca1:source",
+          "value": ".github/workflows/supply-chain.yml"
+        }
+      ],
+      "purl": "pkg:github/actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8",
+      "type": "application",
+      "version": "4d101475d8b20a2381f78447822ac1eab6504dd8"
+    },
+    {
+      "bom-ref": "action/actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+      "description": "GitHub Action pinned to a commit SHA (v7.0.1)",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://github.com/actions/checkout"
+        }
+      ],
+      "group": "actions",
+      "licenses": [
+        {
+          "license": {
+            "name": "NOASSERTION"
+          }
+        }
+      ],
+      "name": "checkout",
+      "properties": [
+        {
+          "name": "lca1:action:pinned-by",
+          "value": "full commit SHA"
+        },
+        {
+          "name": "lca1:action:release-tag",
+          "value": "v7.0.1"
+        },
+        {
+          "name": "lca1:license:noassertion-reason",
+          "value": "action licenses are not inventoried in NOTICE; the action is executed by GitHub, not redistributed here"
+        },
+        {
+          "name": "lca1:role",
+          "value": "ci-action"
+        },
+        {
+          "name": "lca1:source",
+          "value": ".github/workflows/ci.yml"
+        },
+        {
+          "name": "lca1:source",
+          "value": ".github/workflows/harden.yml"
+        },
+        {
+          "name": "lca1:source",
+          "value": ".github/workflows/mutation.yml"
+        },
+        {
+          "name": "lca1:source",
+          "value": ".github/workflows/scorecard.yml"
+        },
+        {
+          "name": "lca1:source",
+          "value": ".github/workflows/supply-chain.yml"
+        }
+      ],
+      "purl": "pkg:github/actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+      "type": "application",
+      "version": "3d3c42e5aac5ba805825da76410c181273ba90b1"
+    },
+    {
+      "bom-ref": "action/actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+      "description": "GitHub Action pinned to a commit SHA (v7.0.0)",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://github.com/actions/setup-node"
+        }
+      ],
+      "group": "actions",
+      "licenses": [
+        {
+          "license": {
+            "name": "NOASSERTION"
+          }
+        }
+      ],
+      "name": "setup-node",
+      "properties": [
+        {
+          "name": "lca1:action:pinned-by",
+          "value": "full commit SHA"
+        },
+        {
+          "name": "lca1:action:release-tag",
+          "value": "v7.0.0"
+        },
+        {
+          "name": "lca1:license:noassertion-reason",
+          "value": "action licenses are not inventoried in NOTICE; the action is executed by GitHub, not redistributed here"
+        },
+        {
+          "name": "lca1:role",
+          "value": "ci-action"
+        },
+        {
+          "name": "lca1:source",
+          "value": ".github/workflows/ci.yml"
+        }
+      ],
+      "purl": "pkg:github/actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+      "type": "application",
+      "version": "820762786026740c76f36085b0efc47a31fe5020"
+    },
+    {
+      "bom-ref": "action/actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97",
+      "description": "GitHub Action pinned to a commit SHA (v7.0.0)",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://github.com/actions/setup-python"
+        }
+      ],
+      "group": "actions",
+      "licenses": [
+        {
+          "license": {
+            "name": "NOASSERTION"
+          }
+        }
+      ],
+      "name": "setup-python",
+      "properties": [
+        {
+          "name": "lca1:action:pinned-by",
+          "value": "full commit SHA"
+        },
+        {
+          "name": "lca1:action:release-tag",
+          "value": "v7.0.0"
+        },
+        {
+          "name": "lca1:license:noassertion-reason",
+          "value": "action licenses are not inventoried in NOTICE; the action is executed by GitHub, not redistributed here"
+        },
+        {
+          "name": "lca1:role",
+          "value": "ci-action"
+        },
+        {
+          "name": "lca1:source",
+          "value": ".github/workflows/ci.yml"
+        },
+        {
+          "name": "lca1:source",
+          "value": ".github/workflows/supply-chain.yml"
+        }
+      ],
+      "purl": "pkg:github/actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97",
+      "type": "application",
+      "version": "5fda3b95a4ea91299a34e894583c3862153e4b97"
+    },
+    {
+      "bom-ref": "action/actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a",
+      "description": "GitHub Action pinned to a commit SHA (v7.0.1)",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://github.com/actions/upload-artifact"
+        }
+      ],
+      "group": "actions",
+      "licenses": [
+        {
+          "license": {
+            "name": "NOASSERTION"
+          }
+        }
+      ],
+      "name": "upload-artifact",
+      "properties": [
+        {
+          "name": "lca1:action:pinned-by",
+          "value": "full commit SHA"
+        },
+        {
+          "name": "lca1:action:release-tag",
+          "value": "v7.0.1"
+        },
+        {
+          "name": "lca1:license:noassertion-reason",
+          "value": "action licenses are not inventoried in NOTICE; the action is executed by GitHub, not redistributed here"
+        },
+        {
+          "name": "lca1:role",
+          "value": "ci-action"
+        },
+        {
+          "name": "lca1:source",
+          "value": ".github/workflows/ci.yml"
+        },
+        {
+          "name": "lca1:source",
+          "value": ".github/workflows/harden.yml"
+        },
+        {
+          "name": "lca1:source",
+          "value": ".github/workflows/mutation.yml"
+        },
+        {
+          "name": "lca1:source",
+          "value": ".github/workflows/scorecard.yml"
+        },
+        {
+          "name": "lca1:source",
+          "value": ".github/workflows/supply-chain.yml"
+        }
+      ],
+      "purl": "pkg:github/actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a",
+      "type": "application",
+      "version": "043fb46d1a93c77aae656e7c1c64a875d1fc6a0a"
+    },
+    {
+      "bom-ref": "action/ossf/scorecard-action@2d1146689b8cda280b9bc96326124645441f03bc",
+      "description": "GitHub Action pinned to a commit SHA (v2.4.4)",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://github.com/ossf/scorecard-action"
+        }
+      ],
+      "group": "ossf",
+      "licenses": [
+        {
+          "license": {
+            "name": "NOASSERTION"
+          }
+        }
+      ],
+      "name": "scorecard-action",
+      "properties": [
+        {
+          "name": "lca1:action:pinned-by",
+          "value": "full commit SHA"
+        },
+        {
+          "name": "lca1:action:release-tag",
+          "value": "v2.4.4"
+        },
+        {
+          "name": "lca1:license:noassertion-reason",
+          "value": "action licenses are not inventoried in NOTICE; the action is executed by GitHub, not redistributed here"
+        },
+        {
+          "name": "lca1:role",
+          "value": "ci-action"
+        },
+        {
+          "name": "lca1:source",
+          "value": ".github/workflows/scorecard.yml"
+        }
+      ],
+      "purl": "pkg:github/ossf/scorecard-action@2d1146689b8cda280b9bc96326124645441f03bc",
+      "type": "application",
+      "version": "2d1146689b8cda280b9bc96326124645441f03bc"
+    },
+    {
+      "bom-ref": "container/ghcr.io/librelane/librelane:3.0.9",
+      "description": "Container image used by the physical-implementation flow",
+      "externalReferences": [
+        {
+          "type": "distribution",
+          "url": "https://ghcr.io/librelane/librelane"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "name": "NOASSERTION"
+          }
+        }
+      ],
+      "name": "ghcr.io/librelane/librelane",
+      "properties": [
+        {
+          "name": "lca1:container:digest",
+          "value": "NOASSERTION"
+        },
+        {
+          "name": "lca1:container:reference",
+          "value": "ghcr.io/librelane/librelane:3.0.9"
+        },
+        {
+          "name": "lca1:license:noassertion-reason",
+          "value": "image license is not declared in this repository"
+        },
+        {
+          "name": "lca1:pin:gap",
+          "value": "pinned by mutable version tag, not by immutable sha256 digest; a retag would change the tool without changing this SBOM"
+        },
+        {
+          "name": "lca1:role",
+          "value": "toolchain:physical-implementation"
+        },
+        {
+          "name": "lca1:source",
+          "value": ".github/workflows/harden.yml"
+        }
+      ],
+      "type": "container",
+      "version": "3.0.9"
+    },
+    {
+      "bom-ref": "file/firmware/fips202.h",
+      "description": "PQClean-derived FIPS 202 header; public domain per NOTICE.",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "79fb770a915abb5bd0d7f2b24b256f38f6b7f3ac4c5e4ef687f84d0d5fd02574"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "CC0-1.0"
+          }
+        }
+      ],
+      "name": "firmware/fips202.h",
+      "properties": [
+        {
+          "name": "lca1:license:source",
+          "value": "NOTICE"
+        },
+        {
+          "name": "lca1:role",
+          "value": "third-party-derived-source"
+        }
+      ],
+      "type": "file"
+    },
+    {
+      "bom-ref": "file/firmware/fips202_lca.c",
+      "description": "PQClean-derived FIPS 202 permutation; public domain per NOTICE.",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "8f7d912c3a68ea6d06905f64fac70a3a5a43bd32bf77fada4773ae3982494e79"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "CC0-1.0"
+          }
+        }
+      ],
+      "name": "firmware/fips202_lca.c",
+      "properties": [
+        {
+          "name": "lca1:license:source",
+          "value": "NOTICE"
+        },
+        {
+          "name": "lca1:role",
+          "value": "third-party-derived-source"
+        }
+      ],
+      "type": "file"
+    },
+    {
+      "bom-ref": "file/verification/vectors/external/cctv_mlkem768_ntt.json",
+      "description": "C2SP/CCTV ML-KEM-768 intermediate values; source URL and SHA-256 recorded inside the file.",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "074ac144095393a8c1d90c5a5680c72368a224b104c8f2d44dc9c908dd861fe2"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "CC0-1.0"
+          }
+        }
+      ],
+      "name": "verification/vectors/external/cctv_mlkem768_ntt.json",
+      "properties": [
+        {
+          "name": "lca1:license:source",
+          "value": "NOTICE"
+        },
+        {
+          "name": "lca1:role",
+          "value": "third-party-derived-source"
+        }
+      ],
+      "type": "file"
+    },
+    {
+      "bom-ref": "hardware/device/LCA1-S0-REV-A",
+      "description": "Host-attached lattice and Keccak accelerator for Suwappu bridge and chain verification paths",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "name": "LCA1-S0-REV-A",
+      "properties": [
+        {
+          "name": "lca1:hardware:kind",
+          "value": "asic-release-contract"
+        },
+        {
+          "name": "lca1:package:family",
+          "value": "QFN64"
+        },
+        {
+          "name": "lca1:package:status",
+          "value": "provisional_pending_vendor_confirmation"
+        },
+        {
+          "name": "lca1:release:status",
+          "value": "integration_contract"
+        },
+        {
+          "name": "lca1:route:process",
+          "value": "SKY130"
+        },
+        {
+          "name": "lca1:route:process-status",
+          "value": "vendor_published_not_contracted"
+        },
+        {
+          "name": "lca1:route:service",
+          "value": "chipIgnite"
+        },
+        {
+          "name": "lca1:route:shuttle",
+          "value": "CI2612"
+        },
+        {
+          "name": "lca1:route:vendor",
+          "value": "ChipFoundry"
+        },
+        {
+          "name": "lca1:source",
+          "value": "fabrication/rev_a_package.json"
+        },
+        {
+          "name": "lca1:source",
+          "value": "fabrication/rev_a_release.json"
+        },
+        {
+          "name": "lca1:submission:format",
+          "value": "GDSII"
+        }
+      ],
+      "type": "device",
+      "version": "2026-08-13"
+    },
+    {
+      "bom-ref": "hardware/harness/openframe@ca732a645568d89efc9db3052eadeca47c60cf4d",
+      "description": "OpenFrame user-project harness the Rev-A user area plugs into",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://github.com/chipfoundry/openframe_user_project"
+        },
+        {
+          "type": "documentation",
+          "url": "https://github.com/chipfoundry/openframe_user_project/blob/ca732a645568d89efc9db3052eadeca47c60cf4d/docs/caravel_openframe_datasheet.pdf"
+        }
+      ],
+      "group": "chipfoundry",
+      "licenses": [
+        {
+          "license": {
+            "name": "NOASSERTION"
+          }
+        }
+      ],
+      "name": "OpenFrame",
+      "properties": [
+        {
+          "name": "lca1:hardware:kind",
+          "value": "soc-harness"
+        },
+        {
+          "name": "lca1:harness:freeze-status",
+          "value": "pinned_for_smoke_test_not_vendor_accepted"
+        },
+        {
+          "name": "lca1:harness:gpio-count",
+          "value": "44"
+        },
+        {
+          "name": "lca1:harness:template-tree",
+          "value": "043bcc404ee043bbe8a33f14ec24affb0dd3300b"
+        },
+        {
+          "name": "lca1:harness:top-module",
+          "value": "openframe_project_wrapper"
+        },
+        {
+          "name": "lca1:harness:user-area-mm2",
+          "value": "15.0"
+        },
+        {
+          "name": "lca1:license:noassertion-reason",
+          "value": "upstream openframe_user_project terms are not inventoried in NOTICE; the repository vendors no OpenFrame source"
+        },
+        {
+          "name": "lca1:source",
+          "value": "fabrication/rev_a_release.json"
+        }
+      ],
+      "purl": "pkg:github/chipfoundry/openframe_user_project@ca732a645568d89efc9db3052eadeca47c60cf4d",
+      "type": "framework",
+      "version": "ca732a645568d89efc9db3052eadeca47c60cf4d"
+    },
+    {
+      "bom-ref": "hardware/macro/CF_SRAM_8192x32",
+      "description": "Compiled SRAM macro selected for the Rev-A memory baseline",
+      "group": "chipfoundry",
+      "licenses": [
+        {
+          "license": {
+            "name": "NOASSERTION"
+          }
+        }
+      ],
+      "name": "CF_SRAM_8192x32",
+      "properties": [
+        {
+          "name": "lca1:hardware:kind",
+          "value": "sram-macro"
+        },
+        {
+          "name": "lca1:license:noassertion-reason",
+          "value": "commercial IP: commercial_views_and_license_not_yet_acquired"
+        },
+        {
+          "name": "lca1:macro:acquisition-status",
+          "value": "commercial_views_and_license_not_yet_acquired"
+        },
+        {
+          "name": "lca1:macro:area-mm2-each-vendor-published",
+          "value": "1.34"
+        },
+        {
+          "name": "lca1:macro:bits-per-word",
+          "value": "32"
+        },
+        {
+          "name": "lca1:macro:interface",
+          "value": "Wishbone"
+        },
+        {
+          "name": "lca1:macro:words-per-instance",
+          "value": "8192"
+        },
+        {
+          "name": "lca1:memory:baseline-bytes",
+          "value": "32768"
+        },
+        {
+          "name": "lca1:memory:baseline-instances",
+          "value": "1"
+        },
+        {
+          "name": "lca1:memory:experiment-bytes",
+          "value": "65536"
+        },
+        {
+          "name": "lca1:memory:experiment-instances",
+          "value": "2"
+        },
+        {
+          "name": "lca1:source",
+          "value": "fabrication/rev_a_release.json"
+        }
+      ],
+      "type": "library"
+    },
+    {
+      "bom-ref": "hardware/pdk/sky130A",
+      "description": "SKY130 process design kit variant used by the hardening flow",
+      "licenses": [
+        {
+          "license": {
+            "name": "NOASSERTION"
+          }
+        }
+      ],
+      "name": "sky130A",
+      "properties": [
+        {
+          "name": "lca1:hardware:kind",
+          "value": "pdk"
+        },
+        {
+          "name": "lca1:license:noassertion-reason",
+          "value": "the repository vendors no PDK files and declares no PDK license; SKY130 terms come with the PDK, which is downloaded at flow time"
+        },
+        {
+          "name": "lca1:pdk:version-pin",
+          "value": "none: resolved by the LibreLane container at run time"
+        },
+        {
+          "name": "lca1:process",
+          "value": "SKY130"
+        },
+        {
+          "name": "lca1:process-status",
+          "value": "vendor_published_not_contracted"
+        },
+        {
+          "name": "lca1:source",
+          "value": "hardening/lca_butterfly/config.json"
+        }
+      ],
+      "type": "library"
+    },
+    {
+      "bom-ref": "hardware/stdcells/sky130_fd_sc_hd",
+      "description": "Standard cell library selected for the SKY130 hardening flow",
+      "licenses": [
+        {
+          "license": {
+            "name": "NOASSERTION"
+          }
+        }
+      ],
+      "name": "sky130_fd_sc_hd",
+      "properties": [
+        {
+          "name": "lca1:hardware:kind",
+          "value": "standard-cell-library"
+        },
+        {
+          "name": "lca1:license:noassertion-reason",
+          "value": "the repository vendors no cell views and declares no cell library license; terms ship with the PDK"
+        },
+        {
+          "name": "lca1:pdk",
+          "value": "sky130A"
+        },
+        {
+          "name": "lca1:source",
+          "value": "hardening/lca_butterfly/config.json"
+        }
+      ],
+      "type": "library"
+    },
+    {
+      "bom-ref": "npm/@yowasp/yosys@0.68.1207",
+      "externalReferences": [
+        {
+          "type": "distribution",
+          "url": "https://registry.npmjs.org/@yowasp/yosys/-/yosys-0.68.1207.tgz"
+        }
+      ],
+      "group": "@yowasp",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "bd8412f2768ad22918216f0e209ae65df96710ee5e98d2afa1e1aa64bd91947ceb9527d2ade767a3c1ce55392153998b755e5164e44be16869d37beac9301714"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "ISC"
+          }
+        }
+      ],
+      "name": "yosys",
+      "properties": [
+        {
+          "name": "lca1:npm:integrity",
+          "value": "sha512-vYQS8naK0ikYIW8OIJrmXflnEO5emNKvoeGqZL2RlHzrlSfSredno8HOVTkhU5mLdV5RZORL4Whp03vqyTAXFA=="
+        },
+        {
+          "name": "lca1:role",
+          "value": "toolchain:synthesis-and-formal"
+        },
+        {
+          "name": "lca1:source",
+          "value": "package-lock.json"
+        },
+        {
+          "name": "lca1:toolchain:invocation",
+          "value": "tools/run_yosys.mjs"
+        },
+        {
+          "name": "lca1:yosys:upstream-version",
+          "value": "0.68"
+        }
+      ],
+      "purl": "pkg:npm/%40yowasp/yosys@0.68.1207",
+      "type": "application",
+      "version": "0.68.1207"
+    },
+    {
+      "bom-ref": "pypi/click@8.3.1",
+      "description": "Python tool pinned to an exact version by the CI workflows",
+      "licenses": [
+        {
+          "license": {
+            "name": "NOASSERTION"
+          }
+        }
+      ],
+      "name": "click",
+      "properties": [
+        {
+          "name": "lca1:license:noassertion-reason",
+          "value": "license is not declared in this repository"
+        },
+        {
+          "name": "lca1:pin:kind",
+          "value": "exact version, no hash"
+        },
+        {
+          "name": "lca1:role",
+          "value": "toolchain:ci"
+        },
+        {
+          "name": "lca1:source",
+          "value": ".github/workflows/mutation.yml"
+        }
+      ],
+      "purl": "pkg:pypi/click@8.3.1",
+      "type": "library",
+      "version": "8.3.1"
+    },
+    {
+      "bom-ref": "pypi/reuse@6.2.0",
+      "description": "Python tool pinned to an exact version by the CI workflows",
+      "licenses": [
+        {
+          "license": {
+            "name": "NOASSERTION"
+          }
+        }
+      ],
+      "name": "reuse",
+      "properties": [
+        {
+          "name": "lca1:license:noassertion-reason",
+          "value": "license is not declared in this repository"
+        },
+        {
+          "name": "lca1:pin:kind",
+          "value": "exact version, no hash"
+        },
+        {
+          "name": "lca1:role",
+          "value": "toolchain:ci"
+        },
+        {
+          "name": "lca1:source",
+          "value": ".github/workflows/ci.yml"
+        }
+      ],
+      "purl": "pkg:pypi/reuse@6.2.0",
+      "type": "library",
+      "version": "6.2.0"
+    },
+    {
+      "bom-ref": "pypi/setuptools",
+      "licenses": [
+        {
+          "license": {
+            "name": "NOASSERTION"
+          }
+        }
+      ],
+      "name": "setuptools",
+      "properties": [
+        {
+          "name": "lca1:license:noassertion-reason",
+          "value": "build-system requirement; pyproject.toml declares a version range, not a license"
+        },
+        {
+          "name": "lca1:python:build-requirement",
+          "value": "setuptools>=68"
+        },
+        {
+          "name": "lca1:source",
+          "value": "pyproject.toml"
+        }
+      ],
+      "type": "library"
+    },
+    {
+      "bom-ref": "repo/YosysHQ/mcy@5a2cad0cbefceb7f23051c08348bd23128fd1046",
+      "description": "External repository checked out in CI, pinned to a commit SHA",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://github.com/YosysHQ/mcy"
+        }
+      ],
+      "group": "YosysHQ",
+      "licenses": [
+        {
+          "license": {
+            "name": "NOASSERTION"
+          }
+        }
+      ],
+      "name": "mcy",
+      "properties": [
+        {
+          "name": "lca1:license:noassertion-reason",
+          "value": "license is not inventoried in NOTICE"
+        },
+        {
+          "name": "lca1:pin:kind",
+          "value": "full commit SHA"
+        },
+        {
+          "name": "lca1:role",
+          "value": "toolchain:ci"
+        },
+        {
+          "name": "lca1:source",
+          "value": ".github/workflows/mutation.yml"
+        }
+      ],
+      "purl": "pkg:github/YosysHQ/mcy@5a2cad0cbefceb7f23051c08348bd23128fd1046",
+      "type": "application",
+      "version": "5a2cad0cbefceb7f23051c08348bd23128fd1046"
+    },
+    {
+      "bom-ref": "submodule/third_party/PQClean@0586a824fc0d49df0b6b6e9179d8d15d06d0974f",
+      "description": "git submodule pinned at third_party/PQClean",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://github.com/PQClean/PQClean.git"
+        }
+      ],
+      "group": "third_party",
+      "licenses": [
+        {
+          "license": {
+            "id": "CC0-1.0"
+          }
+        },
+        {
+          "license": {
+            "id": "MIT"
+          }
+        },
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "name": "PQClean",
+      "properties": [
+        {
+          "name": "lca1:license:source",
+          "value": "NOTICE: licensed per scheme, predominantly CC0-1.0 with some MIT and Apache-2.0 components"
+        },
+        {
+          "name": "lca1:source",
+          "value": ".gitmodules"
+        },
+        {
+          "name": "lca1:submodule:checked-out",
+          "value": "false"
+        },
+        {
+          "name": "lca1:submodule:gap",
+          "value": "working tree not populated; per-file contents and the complete license inventory inside the submodule are not covered by this SBOM"
+        },
+        {
+          "name": "lca1:submodule:path",
+          "value": "third_party/PQClean"
+        },
+        {
+          "name": "lca1:submodule:sha-source",
+          "value": "git gitlink at HEAD"
+        },
+        {
+          "name": "lca1:submodule:url",
+          "value": "https://github.com/PQClean/PQClean.git"
+        }
+      ],
+      "purl": "pkg:github/PQClean/PQClean@0586a824fc0d49df0b6b6e9179d8d15d06d0974f",
+      "type": "library",
+      "version": "0586a824fc0d49df0b6b6e9179d8d15d06d0974f"
+    },
+    {
+      "bom-ref": "submodule/third_party/picorv32@a473fc8fca393771d83b0ffcf0b14db3393339d8",
+      "description": "git submodule pinned at third_party/picorv32",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://github.com/YosysHQ/picorv32.git"
+        }
+      ],
+      "group": "third_party",
+      "licenses": [
+        {
+          "license": {
+            "id": "ISC"
+          }
+        }
+      ],
+      "name": "picorv32",
+      "properties": [
+        {
+          "name": "lca1:license:source",
+          "value": "NOTICE: ISC, see the submodule COPYING file"
+        },
+        {
+          "name": "lca1:source",
+          "value": ".gitmodules"
+        },
+        {
+          "name": "lca1:submodule:checked-out",
+          "value": "false"
+        },
+        {
+          "name": "lca1:submodule:gap",
+          "value": "working tree not populated; per-file contents and the complete license inventory inside the submodule are not covered by this SBOM"
+        },
+        {
+          "name": "lca1:submodule:path",
+          "value": "third_party/picorv32"
+        },
+        {
+          "name": "lca1:submodule:sha-source",
+          "value": "git gitlink at HEAD"
+        },
+        {
+          "name": "lca1:submodule:url",
+          "value": "https://github.com/YosysHQ/picorv32.git"
+        }
+      ],
+      "purl": "pkg:github/YosysHQ/picorv32@a473fc8fca393771d83b0ffcf0b14db3393339d8",
+      "type": "library",
+      "version": "a473fc8fca393771d83b0ffcf0b14db3393339d8"
+    },
+    {
+      "bom-ref": "toolchain/apt/iverilog",
+      "description": "Host tool installed unpinned from the Ubuntu runner archive",
+      "licenses": [
+        {
+          "license": {
+            "name": "NOASSERTION"
+          }
+        }
+      ],
+      "name": "iverilog",
+      "properties": [
+        {
+          "name": "lca1:license:noassertion-reason",
+          "value": "distribution package: neither version nor license is pinned by this repository"
+        },
+        {
+          "name": "lca1:pin:gap",
+          "value": "apt-get install without a version pin"
+        },
+        {
+          "name": "lca1:pin:mitigation",
+          "value": "the resolved version is recorded per run into reports/"
+        },
+        {
+          "name": "lca1:role",
+          "value": "toolchain:host-tool"
+        },
+        {
+          "name": "lca1:source",
+          "value": ".github/workflows/ci.yml"
+        },
+        {
+          "name": "lca1:source",
+          "value": ".github/workflows/mutation.yml"
+        }
+      ],
+      "type": "application"
+    },
+    {
+      "bom-ref": "toolchain/apt/yosys",
+      "description": "Host tool installed unpinned from the Ubuntu runner archive",
+      "licenses": [
+        {
+          "license": {
+            "name": "NOASSERTION"
+          }
+        }
+      ],
+      "name": "yosys",
+      "properties": [
+        {
+          "name": "lca1:license:noassertion-reason",
+          "value": "distribution package: neither version nor license is pinned by this repository"
+        },
+        {
+          "name": "lca1:pin:gap",
+          "value": "apt-get install without a version pin"
+        },
+        {
+          "name": "lca1:pin:mitigation",
+          "value": "the resolved version is recorded per run into reports/"
+        },
+        {
+          "name": "lca1:role",
+          "value": "toolchain:host-tool"
+        },
+        {
+          "name": "lca1:source",
+          "value": ".github/workflows/mutation.yml"
+        }
+      ],
+      "type": "application"
+    },
+    {
+      "bom-ref": "toolchain/node@24.14.0",
+      "description": "Build/verification runtime pinned by package.json engines",
+      "licenses": [
+        {
+          "license": {
+            "name": "NOASSERTION"
+          }
+        }
+      ],
+      "name": "node",
+      "properties": [
+        {
+          "name": "lca1:license:noassertion-reason",
+          "value": "host runtime is installed by CI, not redistributed here, and its license is not declared in this repository"
+        },
+        {
+          "name": "lca1:role",
+          "value": "toolchain:runtime"
+        },
+        {
+          "name": "lca1:source",
+          "value": "package.json"
+        }
+      ],
+      "type": "application",
+      "version": "24.14.0"
+    },
+    {
+      "bom-ref": "toolchain/npm@11.9.0",
+      "description": "Build/verification runtime pinned by package.json engines",
+      "licenses": [
+        {
+          "license": {
+            "name": "NOASSERTION"
+          }
+        }
+      ],
+      "name": "npm",
+      "properties": [
+        {
+          "name": "lca1:license:noassertion-reason",
+          "value": "host runtime is installed by CI, not redistributed here, and its license is not declared in this repository"
+        },
+        {
+          "name": "lca1:role",
+          "value": "toolchain:runtime"
+        },
+        {
+          "name": "lca1:source",
+          "value": "package.json"
+        }
+      ],
+      "type": "application",
+      "version": "11.9.0"
+    },
+    {
+      "bom-ref": "toolchain/python@3.12.12",
+      "description": "CPython interpreter pinned by the CI workflows",
+      "licenses": [
+        {
+          "license": {
+            "name": "NOASSERTION"
+          }
+        }
+      ],
+      "name": "python",
+      "properties": [
+        {
+          "name": "lca1:license:noassertion-reason",
+          "value": "interpreter is installed by CI and its license is not declared in this repository"
+        },
+        {
+          "name": "lca1:python:requires-python",
+          "value": ">=3.10"
+        },
+        {
+          "name": "lca1:role",
+          "value": "toolchain:runtime"
+        },
+        {
+          "name": "lca1:source",
+          "value": ".github/workflows/ci.yml"
+        }
+      ],
+      "type": "application",
+      "version": "3.12.12"
+    }
+  ],
+  "compositions": [
+    {
+      "aggregate": "complete",
+      "assemblies": [
+        "npm/@yowasp/yosys@0.68.1207"
+      ]
+    },
+    {
+      "aggregate": "incomplete",
+      "assemblies": [
+        "submodule/third_party/PQClean@0586a824fc0d49df0b6b6e9179d8d15d06d0974f",
+        "submodule/third_party/picorv32@a473fc8fca393771d83b0ffcf0b14db3393339d8"
+      ]
+    },
+    {
+      "aggregate": "incomplete",
+      "assemblies": [
+        "container/ghcr.io/librelane/librelane:3.0.9",
+        "hardware/device/LCA1-S0-REV-A",
+        "hardware/harness/openframe@ca732a645568d89efc9db3052eadeca47c60cf4d",
+        "hardware/macro/CF_SRAM_8192x32",
+        "hardware/pdk/sky130A",
+        "hardware/stdcells/sky130_fd_sc_hd"
+      ]
+    },
+    {
+      "aggregate": "incomplete_first_party_only",
+      "assemblies": [
+        "file/firmware/fips202.h",
+        "file/firmware/fips202_lca.c",
+        "file/verification/vectors/external/cctv_mlkem768_ntt.json"
+      ]
+    },
+    {
+      "aggregate": "complete",
+      "assemblies": [
+        "action/actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8",
+        "action/actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+        "action/actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+        "action/actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97",
+        "action/actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a",
+        "action/ossf/scorecard-action@2d1146689b8cda280b9bc96326124645441f03bc",
+        "repo/YosysHQ/mcy@5a2cad0cbefceb7f23051c08348bd23128fd1046"
+      ]
+    },
+    {
+      "aggregate": "unknown",
+      "assemblies": [
+        "toolchain/apt/iverilog",
+        "toolchain/apt/yosys"
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "dependsOn": [
+        "action/actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8",
+        "action/actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+        "action/actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+        "action/actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97",
+        "action/actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a",
+        "action/ossf/scorecard-action@2d1146689b8cda280b9bc96326124645441f03bc",
+        "container/ghcr.io/librelane/librelane:3.0.9",
+        "file/firmware/fips202.h",
+        "file/firmware/fips202_lca.c",
+        "file/verification/vectors/external/cctv_mlkem768_ntt.json",
+        "hardware/device/LCA1-S0-REV-A",
+        "hardware/harness/openframe@ca732a645568d89efc9db3052eadeca47c60cf4d",
+        "hardware/macro/CF_SRAM_8192x32",
+        "hardware/pdk/sky130A",
+        "hardware/stdcells/sky130_fd_sc_hd",
+        "npm/@yowasp/yosys@0.68.1207",
+        "pypi/click@8.3.1",
+        "pypi/reuse@6.2.0",
+        "pypi/setuptools",
+        "repo/YosysHQ/mcy@5a2cad0cbefceb7f23051c08348bd23128fd1046",
+        "submodule/third_party/PQClean@0586a824fc0d49df0b6b6e9179d8d15d06d0974f",
+        "submodule/third_party/picorv32@a473fc8fca393771d83b0ffcf0b14db3393339d8",
+        "toolchain/apt/iverilog",
+        "toolchain/apt/yosys",
+        "toolchain/node@24.14.0",
+        "toolchain/npm@11.9.0",
+        "toolchain/python@3.12.12"
+      ],
+      "ref": "lca1@0.1.0"
+    },
+    {
+      "dependsOn": [],
+      "ref": "action/actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8"
+    },
+    {
+      "dependsOn": [],
+      "ref": "action/actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1"
+    },
+    {
+      "dependsOn": [],
+      "ref": "action/actions/setup-node@820762786026740c76f36085b0efc47a31fe5020"
+    },
+    {
+      "dependsOn": [],
+      "ref": "action/actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97"
+    },
+    {
+      "dependsOn": [],
+      "ref": "action/actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a"
+    },
+    {
+      "dependsOn": [],
+      "ref": "action/ossf/scorecard-action@2d1146689b8cda280b9bc96326124645441f03bc"
+    },
+    {
+      "dependsOn": [],
+      "ref": "container/ghcr.io/librelane/librelane:3.0.9"
+    },
+    {
+      "dependsOn": [],
+      "ref": "file/firmware/fips202.h"
+    },
+    {
+      "dependsOn": [],
+      "ref": "file/firmware/fips202_lca.c"
+    },
+    {
+      "dependsOn": [],
+      "ref": "file/verification/vectors/external/cctv_mlkem768_ntt.json"
+    },
+    {
+      "dependsOn": [],
+      "ref": "hardware/device/LCA1-S0-REV-A"
+    },
+    {
+      "dependsOn": [],
+      "ref": "hardware/harness/openframe@ca732a645568d89efc9db3052eadeca47c60cf4d"
+    },
+    {
+      "dependsOn": [],
+      "ref": "hardware/macro/CF_SRAM_8192x32"
+    },
+    {
+      "dependsOn": [],
+      "ref": "hardware/pdk/sky130A"
+    },
+    {
+      "dependsOn": [],
+      "ref": "hardware/stdcells/sky130_fd_sc_hd"
+    },
+    {
+      "dependsOn": [],
+      "ref": "npm/@yowasp/yosys@0.68.1207"
+    },
+    {
+      "dependsOn": [],
+      "ref": "pypi/click@8.3.1"
+    },
+    {
+      "dependsOn": [],
+      "ref": "pypi/reuse@6.2.0"
+    },
+    {
+      "dependsOn": [],
+      "ref": "pypi/setuptools"
+    },
+    {
+      "dependsOn": [],
+      "ref": "repo/YosysHQ/mcy@5a2cad0cbefceb7f23051c08348bd23128fd1046"
+    },
+    {
+      "dependsOn": [],
+      "ref": "submodule/third_party/PQClean@0586a824fc0d49df0b6b6e9179d8d15d06d0974f"
+    },
+    {
+      "dependsOn": [],
+      "ref": "submodule/third_party/picorv32@a473fc8fca393771d83b0ffcf0b14db3393339d8"
+    },
+    {
+      "dependsOn": [],
+      "ref": "toolchain/apt/iverilog"
+    },
+    {
+      "dependsOn": [],
+      "ref": "toolchain/apt/yosys"
+    },
+    {
+      "dependsOn": [],
+      "ref": "toolchain/node@24.14.0"
+    },
+    {
+      "dependsOn": [],
+      "ref": "toolchain/npm@11.9.0"
+    },
+    {
+      "dependsOn": [],
+      "ref": "toolchain/python@3.12.12"
+    }
+  ],
+  "metadata": {
+    "authors": [
+      {
+        "name": "Suwappu Labs and the LCA-1 contributors"
+      }
+    ],
+    "component": {
+      "bom-ref": "lca1@0.1.0",
+      "description": "Evidence-gated architecture models for the LCA-1 lattice coprocessor",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://github.com/0xSoftBoi/LCA-1"
+        },
+        {
+          "type": "website",
+          "url": "https://github.com/0xSoftBoi/LCA-1"
+        },
+        {
+          "type": "license",
+          "url": "https://github.com/0xSoftBoi/LCA-1/blob/main/LICENSE"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "name": "lca1",
+      "properties": [
+        {
+          "name": "SPDX-License-Identifier",
+          "value": "Apache-2.0"
+        },
+        {
+          "name": "lca1:python:requires-python",
+          "value": ">=3.10"
+        },
+        {
+          "name": "lca1:python:runtime-dependencies",
+          "value": "0"
+        },
+        {
+          "name": "lca1:source",
+          "value": "pyproject.toml"
+        }
+      ],
+      "purl": "pkg:generic/lca1@0.1.0",
+      "type": "application",
+      "version": "0.1.0"
+    },
+    "licenses": [
+      {
+        "license": {
+          "id": "Apache-2.0"
+        }
+      }
+    ],
+    "properties": [
+      {
+        "name": "SPDX-License-Identifier",
+        "value": "Apache-2.0"
+      },
+      {
+        "name": "lca1:sbom:generator",
+        "value": "tools/gen_sbom.py"
+      },
+      {
+        "name": "lca1:sbom:generator-version",
+        "value": "1.0.0"
+      },
+      {
+        "name": "lca1:sbom:determinism",
+        "value": "sorted keys, no wall-clock timestamp, repo-only inputs"
+      },
+      {
+        "name": "lca1:sbom:timestamp-omitted",
+        "value": "metadata.timestamp is intentionally absent so --check is a real drift gate; build time is recorded by the workflow run instead"
+      },
+      {
+        "name": "lca1:sbom:commit-omitted",
+        "value": "the repository commit is intentionally absent (a committed file cannot contain its own commit hash); it is bound by the workflow artifact name and the SLSA provenance attestation"
+      },
+      {
+        "name": "lca1:sbom:component-count",
+        "value": "27"
+      },
+      {
+        "name": "lca1:sbom:regenerate",
+        "value": "python3 tools/gen_sbom.py --output docs/sbom.cdx.json"
+      },
+      {
+        "name": "lca1:sbom:verify",
+        "value": "python3 tools/gen_sbom.py --check"
+      }
+    ],
+    "supplier": {
+      "name": "Suwappu Labs",
+      "url": [
+        "https://github.com/0xSoftBoi/LCA-1"
+      ]
+    },
+    "tools": {
+      "components": [
+        {
+          "bom-ref": "tool/tools/gen_sbom.py@1.0.0",
+          "description": "Dependency-free CycloneDX generator in this repository",
+          "licenses": [
+            {
+              "license": {
+                "id": "Apache-2.0"
+              }
+            }
+          ],
+          "name": "tools/gen_sbom.py",
+          "type": "application",
+          "version": "1.0.0"
+        }
+      ]
+    }
+  },
+  "serialNumber": "urn:uuid:35f9c004-95f4-5eaa-a196-ba7634ce45c1",
+  "specVersion": "1.6",
+  "version": 1
+}
