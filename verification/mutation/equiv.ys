@@ -1,0 +1,36 @@
+# SPDX-License-Identifier: Apache-2.0
+#
+# Formal equivalence filter for one MCY mutation.
+#
+# Reads the unmutated MCY database netlist as `gold` and the mutant produced
+# by create_mutated.sh as `gate`, builds an $equiv miter over matching named
+# wires, and attempts an unbounded proof:
+#
+#   equiv_simple  local (combinational / short sequential) equivalence points
+#   equiv_induct  temporal induction over the remaining points
+#
+# `equiv_status -assert` makes yosys exit non-zero unless every equivalence
+# point is proven. The proof direction is one-sided on purpose: success means
+# the mutant is provably indistinguishable at the module boundary for all
+# input sequences and all states, so it is a NOCHANGE (equivalent) mutant.
+# Failure means "not proven equivalent" - which includes both genuinely
+# non-equivalent mutants and mutants whose equivalence needs a reachability
+# invariant that plain temporal induction cannot supply. Unproven therefore
+# stays inside the coverage denominator, which is the conservative direction
+# for an evidence-gated project.
+#
+# -seq 30 covers the 24-iteration multiply plus handshake slack.
+
+read_rtlil ../../database/design.il
+rename lca_butterfly gold
+
+read_rtlil mutated.il
+rename lca_butterfly gate
+
+equiv_make gold gate equiv
+hierarchy -top equiv
+opt_clean
+
+equiv_simple -seq 30
+equiv_induct -seq 30
+equiv_status -assert
