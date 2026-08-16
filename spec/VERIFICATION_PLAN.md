@@ -16,7 +16,9 @@ cryptographic system.
 | External oracle | forward/inverse NTT built solely from the modeled butterfly against committed C2SP/CCTV ML-KEM-768 intermediate values; zeta ROM against independent FIPS 203/204 derivations | `make test-python` | CCTV transform and round-trip match; all 384 ROM entries match the FIPS-derived Montgomery-domain values |
 | Structural synthesis | elaboration, optimization, generic technology mapping, structural checks and netlist emission | `make synth` | Yosys reports zero structural problems and writes all artifacts |
 | Power contract | trace schema and energy integration behavior | `make test-python` | schema/validation and integration tests pass |
-| Mutation coverage (signal) | kill ratio of the generated corpus over injected netlist mutations of the arithmetic slice | nightly `mutation` workflow / `verification/mutation/README.md` | reported ratio is a monitored lower bound, not a gate; surviving non-equivalent mutants become corpus defects |
+| Mutation coverage (signal) | kill ratio of the generated corpus over injected netlist mutations of the arithmetic slice, with formally-proven-equivalent mutants excluded from the denominator | nightly `mutation` workflow / `verification/mutation/README.md` | reported ratio is a monitored signal, not a gate; surviving non-equivalent mutants are treated as defects until analyzed in `docs/MUTATION_ANALYSIS.md` |
+| Lint (second front-end) | Verilator elaboration and `-Wall` over the E1 slice, advisory over remaining RTL | `bash verification/lint/run_lint.sh` | E1 slice clean under recorded waivers, each waiver carrying a written argument |
+| Leakage baseline (signal) | fixed-vs-random Welch t-test over per-cycle switching-activity traces derived from simulation | `tools/power_trace_from_vcd.py` + `tools/tvla.py` | reported honestly; the unmasked slice **fails** this test by design and no side-channel resistance is claimed |
 
 ## Corpus design
 
@@ -53,6 +55,16 @@ dependency-free and derives expected values from `model/modarith.py`.
   derivation, and zeta ROM to FIPS 203/204 definitions and independently
   maintained CCTV data; it does not cover Keccak, sampling, or any complete
   scheme operation.
+- **Known gap, found by mutation testing (2026-08-16).** The fail-closed
+  canonical-input check is exercised at exactly one out-of-range value per
+  operand: the generated corpus derives its invalid cases from `q` itself,
+  and `formal/lca_butterfly_fault_formal.sv` drives `req_a = 24'd3329`,
+  which is `KEM_Q`. Mutations that accept `q + 2048` instead of faulting
+  therefore survive the corpus, the simulation, and the bounded
+  fail-closed proof simultaneously. Until the corpus generator emits a
+  family of out-of-range operands, the fail-closed property must be read
+  as verified at a single point per operand, not over the invalid range.
+  See `docs/MUTATION_ANALYSIS.md`.
 - None of the proofs cover a future NTT, Keccak, SRAM, entropy, DMA, driver, or
   complete ML-KEM/ML-DSA operation.
 - Digital evidence does not establish physical side-channel or fault

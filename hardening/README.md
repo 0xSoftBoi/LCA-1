@@ -70,8 +70,40 @@ Reading, per the claim-boundary rules:
   workload trace; the power-contract flow (improvement plan item 5) is the
   correct source for workload-shaped numbers.
 
-Next constraint step: either close timing at a relaxed constraint
-(≈14-15 ns, ≈66-70 MHz worst-corner) and record it as the honest v0
-number, or pursue the improvement plan's pipelined-reduction upgrade
-(item 7), which targets exactly this critical path - the 24-bit
-conditional-subtract add/double chain.
+## Constraint sweep — the v0 slice does not close
+
+The hypothesis after the first run was that a relaxed constraint would
+close timing. **It does not, and the trend runs the other way.** Three
+runs, same design, same flow, same PDK, only `CLOCK_PERIOD` changed:
+
+| Constraint | Run | Worst setup slack | Achieved path | Instances | Power |
+|---|---|---|---|---|---|
+| 10 ns | [31885341711](https://github.com/0xSoftBoi/LCA-1/actions/runs/31885341711) (`4a94379`) | −3.237 ns | **13.24 ns** | 7,184 | 1.269 mW |
+| 13 ns | [31916826748](https://github.com/0xSoftBoi/LCA-1/actions/runs/31916826748) (`c6ff5c0`) | −1.190 ns | 14.19 ns | 7,361 | 0.969 mW |
+| 14 ns | [31915959824](https://github.com/0xSoftBoi/LCA-1/actions/runs/31915959824) (`eeddc18`) | −0.959 ns | 14.96 ns | 7,445 | 0.896 mW |
+
+Every run is physically clean: routing DRC, Magic DRC, and LVS all zero,
+hold met (+0.104 to +0.107 ns), instance area identical at 36,697.7 µm².
+
+Two readings, both worth stating plainly:
+
+1. **The slice misses its target at every constraint tried (10–14 ns).**
+   Slack improves as the target relaxes, but never reaches zero in this
+   range, so no constraint in the sweep is a "closing" number.
+2. **Relaxing the constraint makes the design slower, not faster.** The
+   achieved path lengthens monotonically (13.24 → 14.19 → 14.96 ns) while
+   power falls (1.269 → 0.969 → 0.896 mW) and cell count rises. The
+   optimizer spends less effort on timing and more on power as the target
+   loosens. The **best achieved critical path is at the tightest target**.
+
+The honest v0 figure is therefore **≈13.24 ns worst-corner (≈75 MHz)
+achieved but not met**, from the 10 ns run, at the highest power of the
+three. `CLOCK_PERIOD` is left at 10 ns because that produced the best
+timing result.
+
+This is an architectural limit, not a constraint-tuning problem: the
+24-bit conditional-subtract add/double chain is the critical path. The
+pipelined K2-RED/Solinas reduction added in `rtl/lca_modmul_fast.sv`
+(see `docs/FAST_REDUCTION.md`) targets exactly this path and is the
+route to a faster part — but it has no hardening run of its own yet, so
+no comparative PPA claim is made here.

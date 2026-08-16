@@ -140,18 +140,35 @@ quantified unmasked leakage baseline.
 [product page](https://chipfoundry.io/commercial-sram-macro)) with
 commercial views not yet acquired.
 
-**Finding.** A free, Apache-2.0, silicon-lineage alternative exists:
-[OpenRAM](https://github.com/VLSIDA/OpenRAM)-generated
-[sky130_sram_macros](https://github.com/VLSIDA/sky130_sram_macros)
-(1/2/4/16 kB variants, 1rw1r), with SKY130 silicon validation published at
-[ISCAS 2023](https://ieeexplore.ieee.org/document/10181379/) and use across
-the Caravel MPW runs. A 32 KiB bank = 2×16 kB or 8×4 kB macros.
+**Finding — SUPERSEDED 2026-08-16, this section was wrong.** The original
+text claimed [sky130_sram_macros](https://github.com/VLSIDA/sky130_sram_macros)
+ships "1/2/4/16 kB variants" so that "a 32 KiB bank = 2×16 kB or 8×4 kB
+macros". Checking three distribution trees, including the one `open_pdks`
+installs, found **four macros only**: the 4 kB and 16 kB directories carry
+truncated logs and no views, and history contains a commit titled
+"Comment out 8kb and 16kb". A 32 KiB OpenRAM bank is therefore **16 × 2 kB
+macros**.
 
-**Proposed change.** Run **both** 32 KiB variants through the §7 hardening
-flow and commit an evidence-backed decision record (area, achieved clock,
-LVS/precheck friction, licensing auditability) feeding the SRAM-variant
-table in `fabrication/rev_a_release.json`. This converts an open blocker
-into a measured comparison.
+Corrected numbers, from verbatim LEF `SIZE` lines rather than assumption
+(see [`SRAM_DECISION.md`](SRAM_DECISION.md)):
+
+| Option | 32 KiB macro area | vs CF_SRAM | License |
+|---|---|---|---|
+| OpenRAM 2 kB × 16 | 4.553 mm² | **3.40×** | Apache-2.0 |
+| SRAM22 8 KiB × 4 | 2.110 mm² | 1.57× | BSD-3-Clause |
+| CF_SRAM_8192x32 | 1.34 mm² (vendor) | 1.00× | commercial, $2,500 |
+
+The free path costs 3.40× the area and 30.4% of the 15 mm² user area, and
+its silicon-lineage claim does **not** transfer: ISCAS 2023 measured only
+the 1 KiB 32x256 macro, at 34 MHz and 1.7 V, not the 2 kB macro a bank
+would use. SRAM22 is the stronger free option on area.
+
+**Proposed change.** Run the candidate 32 KiB configurations through the §7
+hardening flow and extend the decision record with measured area, achieved
+clock, and LVS/precheck friction. Nine criteria are defined in
+`SRAM_DECISION.md`: four satisfied, one answered negatively, four still
+unmeasured. **No option is selected**, and the commercial-license blocker
+in `fabrication/rev_a_release.json` is not closed by this work.
 
 ## 5. Verification stack
 
@@ -269,19 +286,54 @@ window.
 Ordered by evidence-per-effort; each row lands as its own PR with its own
 gates. Dependencies flow downward.
 
-| # | Item | Layer | Effort | New evidence gained |
+Status as of 2026-08-16: items 1–7 are **done**; what each actually
+delivered, including where it contradicted this plan, is recorded below
+the table.
+
+| # | Item | Layer | Effort | Status |
 |---|---|---|---|---|
-| 1 | MCY mutation job (modmul, butterfly) | §5 | days | corpus adequacy quantified |
-| 2 | SymbiYosys port, k-induction + cover | §5 | days | unbounded proofs, anti-vacuity |
-| 3 | ACVP + CCTV oracle vectors | §5 | days | breaks model-only-oracle circularity |
-| 4 | LibreLane hardening CI (arith slice) | §7 | days–weeks | first measured SKY130 area/fmax |
-| 5 | trace2power per-cycle power + TVLA report | §6 | weeks | executable power contract; first open-PDK leakage artifact |
-| 6 | SRAM decision record (OpenRAM vs CF) | §4 | weeks | closes an open Rev-A blocker with measurements |
-| 7 | Fast modmul beside shift-add slice, exhaustive q=3329 check | §1 | weeks | ~5–8× butterfly latency (*est.*), proven reduction |
+| 1 | MCY mutation job (modmul, butterfly) | §5 | days | **done** — plus equivalence filter; found a real gap |
+| 2 | Unbounded induction proofs | §5 | days | **done** — via Yosys `-tempinduct`, not sby (not installable) |
+| 3 | ACVP + CCTV oracle vectors | §5 | days | **done** |
+| 4 | LibreLane hardening CI (arith slice) | §7 | days–weeks | **done** — 3-point sweep; slice does not close |
+| 5 | Per-cycle power trace + TVLA report | §6 | weeks | **done** — leakage measured and published |
+| 6 | SRAM decision record (OpenRAM vs CF) | §4 | weeks | **done** — but does NOT close the blocker; see §4 |
+| 7 | Fast modmul beside shift-add slice | §1 | weeks | **done** — 2 cycles, exhaustive q=3329 proof |
 | 8 | NTT engine: SRAM-backed coefficients + pipelined butterfly | §2 | weeks | Rev-A engine enters evidence chain |
 | 9 | Verilator coverage + cocotb timing harness | §5 | weeks | corpus blind spots; timing-interleaving defects |
 | 10 | OpenFrame dry-run + precheck CI | §7 | weeks | route validated pre-shuttle |
 | 11 | 2×2 butterfly, masking socket, Cryptol/SAW | §1–3,5 | months | only after 1–10 earn it |
+
+### What items 1–7 actually returned
+
+Three results contradicted the expectations written into this plan, and
+they are the most useful output of the exercise:
+
+1. **Item 6 did not close the SRAM blocker** — it disproved this plan's
+   own premise about which OpenRAM macros exist, and the free path turned
+   out to cost 3.40× the area (§4).
+2. **Item 4 did not find a closing constraint.** The slice misses timing
+   at 10, 13, and 14 ns, and relaxing the target makes the achieved path
+   *longer* because the optimizer trades timing for power. Best achieved
+   is 13.24 ns at the tightest target (`hardening/README.md`).
+3. **Item 1 found a genuine verification gap, not just a number.** The
+   fail-closed canonical check is exercised at exactly one out-of-range
+   value per operand across the corpus *and* the formal harness
+   simultaneously (`docs/MUTATION_ANALYSIS.md`).
+
+Two follow-ups these results create, both unowned:
+
+- **Corpus generator: emit a family of out-of-range operands** per
+  modulus and operand position, replacing the hand-written invalid tuple
+  in `tools/gen_vectors.py`. This is the fix for finding 3 and is
+  specified in `docs/MUTATION_ANALYSIS.md`. Generated data must not be
+  hand-edited, so this is a generator change.
+- **`lca_ntt_accel.sv` blocks Verilator entirely** (`BLKLOOPINIT` on its
+  256-entry reset loops), which is a measured blocker on item 9, and its
+  line 127 evaluates `zeta_q * (a_value - b_value)` at 64 bits where the
+  PQClean reference uses `int32_t` — a divergence that needs a bounds
+  argument before that engine enters any evidence chain
+  (`verification/lint/README.md`).
 
 ## Donor-code license compatibility
 

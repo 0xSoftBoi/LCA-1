@@ -20,7 +20,10 @@ concurrency:
 jobs:
   mutation-coverage:
     runs-on: ubuntu-24.04
-    timeout-minutes: 45
+    # Measured on 4 cores: 30m49s corpus + 20m59s equivalence = ~52 min.
+    # The previous 45-minute budget predated the equivalence filter and
+    # would now time out.
+    timeout-minutes: 120
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1

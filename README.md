@@ -139,7 +139,14 @@ Start with:
     backlog with sequencing and donor-license audit;
 11. `docs/DEPIN_LANDSCAPE.md` - the surveyed DePIN market, its device-identity
     and attestation patterns, and an explicitly negative assessment of the
-    near-term market for hardware post-quantum acceleration.
+    near-term market for hardware post-quantum acceleration;
+12. `docs/MUTATION_ANALYSIS.md` - per-survivor mutation verdicts and the
+    fail-closed verification gap they exposed;
+13. `docs/LEAKAGE_METHODOLOGY.md` - the measured fixed-vs-random leakage
+    baseline and its limits;
+14. `docs/SRAM_DECISION.md`, `docs/FAST_REDUCTION.md`,
+    `docs/SUPPLY_CHAIN.md` - memory fit evidence, the pipelined-reduction
+    candidate, and provenance artifacts.
 
 ## License, adoption, and citation
 
