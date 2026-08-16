@@ -8,6 +8,6 @@
     "dir::../../rtl/lca_butterfly.sv"
   ],
   "CLOCK_PORT": "clk",
-  "CLOCK_PERIOD": 14,
+  "CLOCK_PERIOD": 13,
   "FP_CORE_UTIL": 40
 }
