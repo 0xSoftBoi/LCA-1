@@ -1,0 +1,164 @@
+{
+  "meta": {
+    "version": 2
+  },
+  "DESIGN_NAME": "lca_sram_fit",
+  "PDK": "sky130A",
+  "STD_CELL_LIBRARY": "sky130_fd_sc_hd",
+  "VERILOG_FILES": [
+    "dir::lca_sram_fit.sv"
+  ],
+  "CLOCK_PORT": "clk",
+  "CLOCK_PERIOD": 14,
+  "FP_SIZING": "absolute",
+  "DIE_AREA": [
+    0,
+    0,
+    3060,
+    2230
+  ],
+  "CORE_AREA": [
+    50,
+    50,
+    3010,
+    2180
+  ],
+  "FP_MACRO_HORIZONTAL_HALO": 20,
+  "FP_MACRO_VERTICAL_HALO": 20,
+  "PL_TARGET_DENSITY_PCT": 35,
+  "MACROS": {
+    "sky130_sram_2kbyte_1rw1r_32x512_8": {
+      "gds": [
+        "pdk_dir::libs.ref/sky130_sram_macros/gds/sky130_sram_2kbyte_1rw1r_32x512_8.gds"
+      ],
+      "lef": [
+        "pdk_dir::libs.ref/sky130_sram_macros/lef/sky130_sram_2kbyte_1rw1r_32x512_8.lef"
+      ],
+      "vh": [
+        "dir::sky130_sram_2kbyte_1rw1r_32x512_8.vh"
+      ],
+      "lib": {
+        "*_tt_025C_1v80": [
+          "pdk_dir::libs.ref/sky130_sram_macros/lib/sky130_sram_2kbyte_1rw1r_32x512_8_TT_1p8V_25C.lib"
+        ]
+      },
+      "instances": {
+        "u_bank[0]": {
+          "location": [
+            100.0,
+            100.0
+          ],
+          "orientation": "N"
+        },
+        "u_bank[1]": {
+          "location": [
+            823.1,
+            100.0
+          ],
+          "orientation": "N"
+        },
+        "u_bank[2]": {
+          "location": [
+            1546.2,
+            100.0
+          ],
+          "orientation": "N"
+        },
+        "u_bank[3]": {
+          "location": [
+            2269.3,
+            100.0
+          ],
+          "orientation": "N"
+        },
+        "u_bank[4]": {
+          "location": [
+            100.0,
+            636.54
+          ],
+          "orientation": "N"
+        },
+        "u_bank[5]": {
+          "location": [
+            823.1,
+            636.54
+          ],
+          "orientation": "N"
+        },
+        "u_bank[6]": {
+          "location": [
+            1546.2,
+            636.54
+          ],
+          "orientation": "N"
+        },
+        "u_bank[7]": {
+          "location": [
+            2269.3,
+            636.54
+          ],
+          "orientation": "N"
+        },
+        "u_bank[8]": {
+          "location": [
+            100.0,
+            1173.08
+          ],
+          "orientation": "N"
+        },
+        "u_bank[9]": {
+          "location": [
+            823.1,
+            1173.08
+          ],
+          "orientation": "N"
+        },
+        "u_bank[10]": {
+          "location": [
+            1546.2,
+            1173.08
+          ],
+          "orientation": "N"
+        },
+        "u_bank[11]": {
+          "location": [
+            2269.3,
+            1173.08
+          ],
+          "orientation": "N"
+        },
+        "u_bank[12]": {
+          "location": [
+            100.0,
+            1709.62
+          ],
+          "orientation": "N"
+        },
+        "u_bank[13]": {
+          "location": [
+            823.1,
+            1709.62
+          ],
+          "orientation": "N"
+        },
+        "u_bank[14]": {
+          "location": [
+            1546.2,
+            1709.62
+          ],
+          "orientation": "N"
+        },
+        "u_bank[15]": {
+          "location": [
+            2269.3,
+            1709.62
+          ],
+          "orientation": "N"
+        }
+      }
+    }
+  },
+  "PDN_MACRO_CONNECTIONS": [
+    "u_bank\\[[0-9]+\\] VPWR VGND vccd1 vssd1"
+  ]
+}

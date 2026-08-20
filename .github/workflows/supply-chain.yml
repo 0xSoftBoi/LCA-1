@@ -1,0 +1,116 @@
+# SPDX-License-Identifier: Apache-2.0
+# Supply-chain provenance gates (see docs/SUPPLY_CHAIN.md): CycloneDX SBOM
+# drift detection, end-to-end reproducibility of every generated evidence
+# artifact, and SLSA build provenance over the artifacts that reproduce.
+# Provenance is only meaningful over reproducible bytes, so the attestation
+# job runs after, and depends on, the reproducibility job.
+name: supply-chain
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lca1-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PYTHONHASHSEED: "0"
+
+jobs:
+  sbom-and-reproducibility:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12.12"
+      - name: Record Python version
+        run: python3 --version
+      - name: Compile supply-chain tooling
+        run: python3 -m compileall -q tools tests
+      - name: Check SBOM drift
+        run: python3 tools/gen_sbom.py --check
+      - name: Verify reproducible evidence end to end
+        run: bash tools/verify_reproducible.sh
+      - name: SBOM unit tests
+        run: python3 -m unittest tests.test_sbom -v
+      - name: Archive the SBOM
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: lca1-sbom-${{ github.sha }}
+          path: docs/sbom.cdx.json
+          if-no-files-found: error
+          retention-days: 90
+
+  provenance:
+    # Fork pull requests receive neither an OIDC token nor attestations:write,
+    # so provenance is generated for pushes to main and manual dispatch only.
+    # A PR still runs the drift and reproducibility gates above.
+    if: github.event_name != 'pull_request'
+    needs: sbom-and-reproducibility
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      id-token: write
+      attestations: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12.12"
+      - name: Re-derive the evidence set in this run
+        run: |
+          set -eux
+          mkdir -p evidence
+          python3 tools/gen_sbom.py --output evidence/sbom.cdx.json
+          python3 tools/gen_vectors.py --output evidence/butterfly_vectors.txt
+          python3 tools/gen_fabrication_artifacts.py --check
+          cp fabrication/generated/rev_a_qfn_pinout.csv evidence/
+          cp fabrication/generated/rev_a_gpio_map.csv evidence/
+          cp fabrication/generated/rev_a_ate_plan.csv evidence/
+      - name: Prove the re-derived set matches the committed set
+        run: |
+          set -eux
+          diff -u docs/sbom.cdx.json evidence/sbom.cdx.json
+          diff -u verification/vectors/butterfly_vectors.txt evidence/butterfly_vectors.txt
+      - name: Record the evidence digests
+        run: |
+          sha256sum evidence/* | tee evidence-sha256.txt >> "$GITHUB_STEP_SUMMARY"
+      - name: Generate SLSA build provenance for the evidence set
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
+        with:
+          subject-path: |
+            evidence/sbom.cdx.json
+            evidence/butterfly_vectors.txt
+            evidence/rev_a_qfn_pinout.csv
+            evidence/rev_a_gpio_map.csv
+            evidence/rev_a_ate_plan.csv
+      - name: Archive the attested evidence set
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: lca1-attested-evidence-${{ github.sha }}
+          path: |
+            evidence/
+            evidence-sha256.txt
+          if-no-files-found: error
+          retention-days: 90

@@ -134,6 +134,12 @@
       "action": "Keep as a characterized constant-iteration reference while the integrated arithmetic lane is selected by synthesis evidence."
     },
     {
+      "path": "rtl/lca_modmul_fast.sv",
+      "disposition": "retain",
+      "rev_a_netlist": false,
+      "action": "Retain the two-cycle pipelined K2-RED/Solinas reduction as an arithmetic-lane candidate only. It is outside the E1 evidence chain and is not selected for Rev-A: no requirement IDs, no generated corpus entry, no mutation campaign, and no measured area, timing, or power. Selection requires a hardening run measured against the characterized shift-add reference."
+    },
+    {
       "path": "rtl/lca_ntt_accel.sv",
       "disposition": "modify",
       "rev_a_netlist": true,

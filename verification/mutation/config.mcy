@@ -1,6 +1,7 @@
 [options]
 size 200
-tags COVERED UNCOVERED
+seed 480370689
+tags COVERED UNCOVERED NOCHANGE EQGAP
 
 [script]
 read_verilog -sv ../../rtl/lca_modmul.sv ../../rtl/lca_butterfly.sv
@@ -11,17 +12,32 @@ synth -top lca_butterfly -flatten
 ../../rtl/lca_butterfly.sv
 
 [logic]
-if result("test_sim") == "FAIL":
+sim_survived = (result("test_sim") == "PASS")
+proven_equivalent = (result("test_eq") == "EQUIV")
+
+if sim_survived and proven_equivalent:
+    tag("NOCHANGE")
+elif sim_survived and not proven_equivalent:
+    tag("UNCOVERED")
+elif not sim_survived and not proven_equivalent:
     tag("COVERED")
 else:
-    tag("UNCOVERED")
+    tag("EQGAP")
 
 [report]
-if tags("COVERED")+tags("UNCOVERED"):
+denominator = tags("COVERED") + tags("UNCOVERED")
+if tags("EQGAP"):
+    print("EQGAP: %d mutations the corpus reported as killed are provably equivalent - investigate the testbench, not the corpus" % tags("EQGAP"))
+if tags("NOCHANGE"):
+    print("Equivalent mutants excluded from the denominator: %d" % tags("NOCHANGE"))
+if denominator:
     print("Corpus mutation coverage: %.2f%% (%d/%d killed)" % (
-        100.0*tags("COVERED")/(tags("COVERED")+tags("UNCOVERED")),
-        tags("COVERED"), tags("COVERED")+tags("UNCOVERED")))
+        100.0*tags("COVERED")/denominator, tags("COVERED"), denominator))
 
 [test test_sim]
 expect PASS FAIL
 run bash $PRJDIR/test_sim.sh
+
+[test test_eq]
+expect EQUIV DIFFERENT UNKNOWN
+run bash $PRJDIR/test_eq.sh

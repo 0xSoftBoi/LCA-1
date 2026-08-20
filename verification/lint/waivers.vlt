@@ -1,0 +1,30 @@
+// SPDX-License-Identifier: Apache-2.0
+// Lint waivers for the LCA-1 E1 evidence slice (Verilator config file).
+//
+// Every entry here is a warning that a human read, understood, and judged
+// safe, with the argument recorded in verification/lint/README.md. Waivers
+// are pinned to an exact file, rule, and line so that moving or editing the
+// code re-raises the warning instead of silently inheriting the waiver.
+//
+// Nothing outside the E1 evidence slice is waived: the Rev-A candidate
+// sources are linted in advisory mode and their findings are reported, not
+// suppressed.
+
+`verilator_config
+
+// add_mod(): `sum` is WORD_BITS+1 bits so the unreduced sum cannot wrap.
+// The subtraction is only taken when sum >= q, and both operands are below
+// q, so sum - q < q < 2**WORD_BITS and the discarded top bit is always 0.
+lint_off -rule WIDTHTRUNC -file "*rtl/lca_modmul.sv" -lines 41
+lint_off -rule WIDTHTRUNC -file "*rtl/lca_butterfly.sv" -lines 48
+
+// Iteration-count compare against the elaboration-time integer WORD_BITS-1
+// (= 23). `count` is COUNT_BITS = $clog2(24) = 5 bits and is zero-extended
+// to 32 bits for the compare; 23 is representable, so the compare is exact.
+// The FORMAL block asserts the same bound with an explicit COUNT_BITS' cast.
+lint_off -rule WIDTHEXPAND -file "*rtl/lca_modmul.sv" -lines 81
+
+// sub_mod(): `difference` is WORD_BITS+1 bits, but the wide form is only
+// evaluated on the x < y branch, where x + q - y < q < 2**WORD_BITS. Bit
+// WORD_BITS is therefore provably 0 and is intentionally not read.
+lint_off -rule UNUSEDSIGNAL -file "*rtl/lca_butterfly.sv" -lines 59
