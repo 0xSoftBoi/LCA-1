@@ -43,6 +43,12 @@ jobs:
         run: python3 -m compileall -q tools tests
       - name: Check SBOM drift
         run: python3 tools/gen_sbom.py --check
+      - name: Check generated corpus drift
+        run: python3 tools/gen_vectors.py --check
+      - name: Validate fabrication contract
+        run: python3 tools/validate_fabrication.py
+      - name: Check fabrication artifact drift
+        run: python3 tools/gen_fabrication_artifacts.py --check
       - name: Verify reproducible evidence end to end
         run: bash tools/verify_reproducible.sh
       - name: SBOM unit tests

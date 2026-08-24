@@ -21,6 +21,12 @@ FORMAT_VERSION = 1
 SEED = 0x1CA1E001
 RANDOM_CASES_PER_MODULUS = 128
 DEFAULT_OUTPUT = ROOT / "verification" / "vectors" / "butterfly_vectors.txt"
+WORD_MAX = (1 << WORD_BITS) - 1
+# Mutation testing found that the old corpus exercised canonical rejection only
+# at exactly q. Keep q, but deliberately spread invalid values across the
+# representable out-of-range interval; q+2048 is the concrete survivor witness
+# that exposed the gap. WORD_MAX catches comparators broken near the top end.
+INVALID_DELTAS = (0, 1, 2, 7, 31, 255, 2048)
 
 
 @dataclass(frozen=True)
@@ -63,10 +69,35 @@ def _valid_case(
     )
 
 
+def _invalid_case(case_id: int, modulus_id: int, operands: tuple[int, int, int]) -> Vector:
+    a, b, twiddle = operands
+    return Vector(
+        case_id=case_id,
+        modulus_id=modulus_id,
+        a=a,
+        b=b,
+        twiddle=twiddle,
+        expected_a=0,
+        expected_b=0,
+        expected_fault=1,
+        hold_cycles=(case_id % 3) + 1,
+        expected_latency=0,
+    )
+
+
+def _invalid_values(modulus: int) -> tuple[int, ...]:
+    values = [modulus + delta for delta in INVALID_DELTAS if modulus + delta <= WORD_MAX]
+    if WORD_MAX not in values:
+        values.append(WORD_MAX)
+    return tuple(values)
+
+
 def build_vectors() -> list[Vector]:
     rng = random.Random(SEED)
     vectors: list[Vector] = []
 
+    # Keep the historical valid corpus as one contiguous prefix. This makes
+    # old case IDs stable while the malformed-input family can grow behind it.
     for modulus_id, modulus in enumerate((KEM_Q, DSA_Q)):
         edge_inputs = (
             (0, 0, 0),
@@ -94,32 +125,22 @@ def build_vectors() -> list[Vector]:
                 )
             )
 
-    invalid_inputs = (
-        (0, KEM_Q, 0, 0),
-        (0, 0, KEM_Q, 0),
-        (0, 0, 0, KEM_Q),
-        (1, DSA_Q, 0, 0),
-        (1, 0, DSA_Q, 0),
-        (1, 0, 0, DSA_Q),
-        (2, 0, 0, 0),
-        (3, 0, 0, 0),
-    )
-    for modulus_id, a, b, twiddle in invalid_inputs:
-        case_id = len(vectors)
-        vectors.append(
-            Vector(
-                case_id=case_id,
-                modulus_id=modulus_id,
-                a=a,
-                b=b,
-                twiddle=twiddle,
-                expected_a=0,
-                expected_b=0,
-                expected_fault=1,
-                hold_cycles=(case_id % 3) + 1,
-                expected_latency=0,
-            )
-        )
+    # Exercise every operand comparator over a family of non-canonical
+    # residues, not a single boundary point. Appending these after both valid
+    # blocks preserves all pre-existing valid case IDs and directly closes the
+    # mutation survivors documented in docs/MUTATION_ANALYSIS.md.
+    for modulus_id, modulus in enumerate((KEM_Q, DSA_Q)):
+        for operand_index in range(3):
+            for invalid_value in _invalid_values(modulus):
+                operands = [0, 0, 0]
+                operands[operand_index] = invalid_value
+                vectors.append(
+                    _invalid_case(len(vectors), modulus_id, tuple(operands))
+                )
+
+    # Unsupported modulus IDs remain separate fail-closed cases.
+    for modulus_id in (2, 3):
+        vectors.append(_invalid_case(len(vectors), modulus_id, (0, 0, 0)))
 
     return vectors
 
