@@ -96,6 +96,8 @@ def build_vectors() -> list[Vector]:
     rng = random.Random(SEED)
     vectors: list[Vector] = []
 
+    # Keep the historical valid corpus as one contiguous prefix. This makes
+    # old case IDs stable while the malformed-input family can grow behind it.
     for modulus_id, modulus in enumerate((KEM_Q, DSA_Q)):
         edge_inputs = (
             (0, 0, 0),
@@ -123,9 +125,11 @@ def build_vectors() -> list[Vector]:
                 )
             )
 
-        # Exercise every operand comparator over a family of non-canonical
-        # residues, not a single boundary point. This directly closes the
-        # mutation survivors documented in docs/MUTATION_ANALYSIS.md.
+    # Exercise every operand comparator over a family of non-canonical
+    # residues, not a single boundary point. Appending these after both valid
+    # blocks preserves all pre-existing valid case IDs and directly closes the
+    # mutation survivors documented in docs/MUTATION_ANALYSIS.md.
+    for modulus_id, modulus in enumerate((KEM_Q, DSA_Q)):
         for operand_index in range(3):
             for invalid_value in _invalid_values(modulus):
                 operands = [0, 0, 0]
