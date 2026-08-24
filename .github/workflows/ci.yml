@@ -74,16 +74,19 @@ jobs:
           cache: npm
       - name: Install pinned Yosys runtime
         run: npm ci --ignore-scripts
-      - name: Install RTL simulator
-        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends iverilog
+      - name: Install RTL front-ends
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends iverilog verilator
       - name: Record host tool versions
         run: |
           mkdir -p reports
           node --version | tee reports/node-version.txt
           npm --version | tee reports/npm-version.txt
           iverilog -V > reports/iverilog-version.txt 2>&1
+          verilator --version | tee reports/verilator-version.txt
       - name: Full-width generated RTL regression
         run: make rtl-test
+      - name: Independent Verilator front-end gates
+        run: bash verification/lint/run_lint.sh
       - name: Formal gates
         run: make formal
       - name: Generic structural synthesis
