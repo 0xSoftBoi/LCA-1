@@ -91,7 +91,10 @@ jobs:
             rtl/lca_ntt_accel.sv verification/tb_ntt_protocol.sv
           vvp reports/ntt_protocol.vvp | tee reports/ntt-protocol.txt
       - name: NTT independent Yosys elaboration
-        run: node tools/run_yosys.mjs -q -p 'read_verilog -sv -Irtl rtl/lca_ntt_accel.sv; prep -top lca_ntt_accel; check'
+        run: >-
+          node --experimental-wasm-exnref tools/run_yosys.mjs
+          -l reports/ntt-yosys-elaboration.log
+          -p 'read_verilog -sv -Irtl rtl/lca_ntt_accel.sv; prep -top lca_ntt_accel; check'
       - name: Optional independent Verilator front-end
         run: bash verification/lint/run_lint.sh
       - name: Formal gates
