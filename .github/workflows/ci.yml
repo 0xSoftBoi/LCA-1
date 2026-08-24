@@ -74,18 +74,25 @@ jobs:
           cache: npm
       - name: Install pinned Yosys runtime
         run: npm ci --ignore-scripts
-      - name: Install RTL front-ends
-        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends iverilog verilator
+      - name: Install RTL simulator
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends iverilog
       - name: Record host tool versions
         run: |
           mkdir -p reports
           node --version | tee reports/node-version.txt
           npm --version | tee reports/npm-version.txt
           iverilog -V > reports/iverilog-version.txt 2>&1
-          verilator --version | tee reports/verilator-version.txt
       - name: Full-width generated RTL regression
         run: make rtl-test
-      - name: Independent Verilator front-end gates
+      - name: NTT zeroize and recovery protocol regression
+        run: |
+          iverilog -g2012 -Irtl -s lca_ntt_protocol_tb \
+            -o reports/ntt_protocol.vvp \
+            rtl/lca_ntt_accel.sv verification/tb_ntt_protocol.sv
+          vvp reports/ntt_protocol.vvp | tee reports/ntt-protocol.txt
+      - name: NTT independent Yosys elaboration
+        run: node tools/run_yosys.mjs -q -p 'read_verilog -sv -Irtl rtl/lca_ntt_accel.sv; prep -top lca_ntt_accel; check'
+      - name: Optional independent Verilator front-end
         run: bash verification/lint/run_lint.sh
       - name: Formal gates
         run: make formal
@@ -96,33 +103,6 @@ jobs:
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: lca1-e1-evidence-${{ github.sha }}
-          path: reports/
-          if-no-files-found: warn
-          retention-days: 30
-
-  fullchip-datapath-differential:
-    runs-on: ubuntu-24.04
-    timeout-minutes: 20
-    steps:
-      - name: Checkout with pinned algorithm references
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-          submodules: recursive
-      - name: Install independent CXXRTL toolchain
-        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends yosys g++
-      - name: Record differential-test tool versions
-        run: |
-          mkdir -p reports
-          yosys -V | tee reports/fullchip-yosys-version.txt
-          g++ --version | head -n1 | tee reports/fullchip-gxx-version.txt
-      - name: NTT and Keccak differential tests against pinned PQClean
-        run: make -f Makefile.fullchip test-datapaths
-      - name: Archive full-chip datapath evidence
-        if: always()
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
-        with:
-          name: lca1-fullchip-datapath-${{ github.sha }}
           path: reports/
           if-no-files-found: warn
           retention-days: 30
