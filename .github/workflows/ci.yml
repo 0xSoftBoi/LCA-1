@@ -99,3 +99,30 @@ jobs:
           path: reports/
           if-no-files-found: warn
           retention-days: 30
+
+  fullchip-datapath-differential:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Checkout with pinned algorithm references
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          submodules: recursive
+      - name: Install independent CXXRTL toolchain
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends yosys g++
+      - name: Record differential-test tool versions
+        run: |
+          mkdir -p reports
+          yosys -V | tee reports/fullchip-yosys-version.txt
+          g++ --version | head -n1 | tee reports/fullchip-gxx-version.txt
+      - name: NTT and Keccak differential tests against pinned PQClean
+        run: make -f Makefile.fullchip test-datapaths
+      - name: Archive full-chip datapath evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: lca1-fullchip-datapath-${{ github.sha }}
+          path: reports/
+          if-no-files-found: warn
+          retention-days: 30
