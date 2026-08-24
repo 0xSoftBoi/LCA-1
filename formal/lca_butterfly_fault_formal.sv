@@ -15,6 +15,29 @@ module lca_butterfly_fault_formal (
     wire [23:0] rsp_a;
     wire [23:0] rsp_b;
 
+    // The old harness proved fail-closed behavior at one concrete value only:
+    // ML-KEM req_a == q. Mutation testing found that a comparator accepting
+    // q+2048 survived both simulation and this proof. Make the entire invalid
+    // input space symbolic instead, while keeping the request constant for the
+    // short scripted protocol proof.
+    (* anyconst *) wire [1:0] req_modulus_id;
+    (* anyconst *) wire [23:0] req_a;
+    (* anyconst *) wire [23:0] req_b;
+    (* anyconst *) wire [23:0] req_twiddle;
+
+    wire [23:0] selected_modulus =
+        (req_modulus_id == 2'd0) ? 24'd3329 :
+        (req_modulus_id == 2'd1) ? 24'd8380417 : 24'd0;
+    wire request_is_invalid =
+        (req_modulus_id > 2'd1) ||
+        (req_a >= selected_modulus) ||
+        (req_b >= selected_modulus) ||
+        (req_twiddle >= selected_modulus);
+
+    always @* begin
+        assume(request_is_invalid);
+    end
+
     always @(posedge clk) begin
         if (step < 3'd4)
             step <= step + 1'b1;
@@ -35,10 +58,10 @@ module lca_butterfly_fault_formal (
         .rst_n,
         .req_valid,
         .req_ready,
-        .req_modulus_id(2'd0),
-        .req_a(24'd3329),
-        .req_b(24'd0),
-        .req_twiddle(24'd0),
+        .req_modulus_id,
+        .req_a,
+        .req_b,
+        .req_twiddle,
         .rsp_valid,
         .rsp_ready,
         .rsp_fault,
