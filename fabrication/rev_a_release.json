@@ -3,7 +3,7 @@
   "schema_version": 1,
   "release_id": "LCA1-S0-REV-A",
   "release_status": "integration_contract",
-  "as_of": "2026-08-13",
+  "as_of": "2026-08-25",
   "program": {
     "product": "Suwappu S0",
     "purpose": "Host-attached lattice and Keccak accelerator for Suwappu bridge and chain verification paths",
@@ -143,7 +143,13 @@
       "path": "rtl/lca_ntt_accel.sv",
       "disposition": "modify",
       "rev_a_netlist": true,
-      "action": "Retain the Level-3 NTT/INTT behavior; add the sequential shell stream adapter and harden its coefficient storage deliberately."
+      "action": "Retain the Level-3 NTT/INTT behavior and regression oracle while the synchronous compiled-SRAM physical implementation is independently hardened."
+    },
+    {
+      "path": "rtl/lca_ntt_accel_sram22.sv",
+      "disposition": "retain",
+      "rev_a_netlist": false,
+      "action": "SRAM22-backed two-phase NTT/INTT physical candidate. Promote into the Rev-A netlist only after core integration, pinned SKY130 STA/area evidence, and OpenFrame hardening close."
     },
     {
       "path": "rtl/lca_ntt_zetas.svh",
@@ -156,6 +162,18 @@
       "disposition": "replace",
       "rev_a_netlist": false,
       "action": "Keep only as a behavioral simulation model; replace the silicon implementation with the selected compiled SRAM wrapper."
+    },
+    {
+      "path": "rtl/lca_secure_sram_sram22.sv",
+      "disposition": "retain",
+      "rev_a_netlist": false,
+      "action": "Four-bank 32-KiB SRAM22 physical candidate with registered reads and full-capacity parallel scrub. Promote only after integration and physical signoff evidence."
+    },
+    {
+      "path": "rtl/lca_sram22_macros.sv",
+      "disposition": "retain",
+      "rev_a_netlist": false,
+      "action": "Stable wrappers for the pinned SRAM22 physical macros plus cycle-accurate simulation fallbacks; physical promotion is controlled by the Rev-A hardening configuration."
     }
   ],
   "memory": {
@@ -292,6 +310,7 @@
     {"title": "ChipFoundry commercial SRAM catalog", "url": "https://chipfoundry.io/commercial-sram", "retrieved": "2026-08-13"},
     {"title": "Pinned OpenFrame user-project template", "url": "https://github.com/chipfoundry/openframe_user_project/tree/ca732a645568d89efc9db3052eadeca47c60cf4d", "retrieved": "2026-08-13"},
     {"title": "OpenFrame 64-pin QFN datasheet", "url": "https://github.com/chipfoundry/openframe_user_project/blob/ca732a645568d89efc9db3052eadeca47c60cf4d/docs/caravel_openframe_datasheet.pdf", "retrieved": "2026-08-13"},
-    {"title": "SKY130 I/O library user guide", "url": "https://skywater-pdk.readthedocs.io/en/main/contents/libraries/sky130_fd_io/docs/user_guide.html", "retrieved": "2026-08-13"}
+    {"title": "SKY130 I/O library user guide", "url": "https://skywater-pdk.readthedocs.io/en/main/contents/libraries/sky130_fd_io/docs/user_guide.html", "retrieved": "2026-08-13"},
+    {"title": "Pinned SRAM22 SKY130 macro views", "url": "https://github.com/ucb-substrate/sram22_sky130_macros/tree/75cbe961e18ee00d5a6c73fa455505f0bcdf4c05", "retrieved": "2026-08-25"}
   ]
 }
