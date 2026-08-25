@@ -9,7 +9,8 @@
 //
 // Read data is registered. A port performs either one read or one write on a
 // rising edge; this intentionally matches SRAM22 instead of hiding a fictitious
-// asynchronous read behind the portable model.
+// asynchronous read behind the portable model. Physical power connectivity is
+// handled by macro LEF/GDS plus PDN/global-connect rules, not by behavioral RTL.
 
 `default_nettype none
 
@@ -31,10 +32,6 @@ module lca_sram_1rw #(
     generate
         if (WORDS == 128 && ADDR_W == 7) begin : g_sram22_128
             sram22_128x32m4w8 u_macro (
-`ifdef USE_POWER_PINS
-                .vdd(vccd1),
-                .vss(vssd1),
-`endif
                 .clk(clk_i),
                 .rstb(rst_ni),
                 .ce(ce_i),
@@ -46,10 +43,6 @@ module lca_sram_1rw #(
             );
         end else if (WORDS == 2048 && ADDR_W == 11) begin : g_sram22_2048
             sram22_2048x32m8w8 u_macro (
-`ifdef USE_POWER_PINS
-                .vdd(vccd1),
-                .vss(vssd1),
-`endif
                 .clk(clk_i),
                 .rstb(rst_ni),
                 .ce(ce_i),
@@ -60,7 +53,6 @@ module lca_sram_1rw #(
                 .dout(rdata_o)
             );
         end else begin : g_unsupported_shape
-            // Deliberately fail elaboration for unqualified macro shapes.
             initial $error("Unsupported LCA-1 SRAM22 shape WORDS=%0d ADDR_W=%0d", WORDS, ADDR_W);
             assign rdata_o = 32'd0;
         end
