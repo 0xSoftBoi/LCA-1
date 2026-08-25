@@ -145,6 +145,9 @@ module lca_ntt_accel (
 
     assign coeff_rdata_o = host_read_bank_q ? bank1_rdata : bank0_rdata;
 
+    wire signed [31:0] scale_word = scale_bank ? $signed(bank1_rdata) : $signed(bank0_rdata);
+    wire signed [15:0] scale_word16 = scale_word[15:0];
+
     // Read data from the two SRAM banks becomes valid during ST_BF_WRITE.
     // Reorder it back into logical (j, j+len) operand order.
     always @* begin
@@ -202,14 +205,10 @@ module lca_ntt_accel (
     // Inverse final scaling consumes the registered output of ST_SCALE_READ.
     always @* begin
         if (command_q == CMD_MLDSA_INTT) begin
-            scale_result = mldsa_montgomery_reduce(
-                64'sd41978 * $signed(scale_bank ? bank1_rdata : bank0_rdata)
-            );
+            scale_result = mldsa_montgomery_reduce(64'sd41978 * scale_word);
         end else begin
             scale_result = sign_extend_16(
-                mlkem_montgomery_reduce(
-                    32'sd1441 * $signed((scale_bank ? bank1_rdata : bank0_rdata) & 32'h0000ffff)
-                )
+                mlkem_montgomery_reduce(32'sd1441 * scale_word16)
             );
         end
     end
