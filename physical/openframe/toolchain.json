@@ -1,0 +1,19 @@
+{
+  "openframe": {
+    "repository": "https://github.com/chipfoundry/openframe_user_project",
+    "commit": "ca732a645568d89efc9db3052eadeca47c60cf4d"
+  },
+  "librelane": {
+    "chipfoundry_tag": "CI2511"
+  },
+  "pdk": {
+    "name": "sky130A",
+    "open_pdks_commit": "3e0e31dcce8519a7dbb82590346db16d91b7244f",
+    "open_pdks_lvs_commit": "6d4d11780c40b20ee63cc98e645307a9bf2b2ab8"
+  },
+  "clock": {
+    "port": "clk_i",
+    "period_ns": 40.0,
+    "baseline_mhz": 25
+  }
+}
