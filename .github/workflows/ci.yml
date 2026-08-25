@@ -92,6 +92,13 @@ jobs:
             -o reports/sram22_contract.vvp \
             rtl/lca_sram22_macros.sv verification/tb_sram22_contract.sv
           vvp reports/sram22_contract.vvp | tee reports/sram22-contract.txt
+      - name: Macro-backed secure SRAM fabric regression
+        run: |
+          iverilog -g2012 -s lca_secure_sram_sram22_tb \
+            -o reports/secure_sram_sram22.vvp \
+            rtl/lca_sram22_macros.sv rtl/lca_secure_sram_sram22.sv \
+            verification/tb_secure_sram_sram22.sv
+          vvp reports/secure_sram_sram22.vvp | tee reports/secure-sram-sram22.txt
       - name: NTT zeroize and recovery protocol regression
         run: |
           iverilog -g2012 -Irtl -s lca_ntt_protocol_tb \
@@ -115,6 +122,11 @@ jobs:
           node --experimental-wasm-exnref tools/run_yosys.mjs
           -l reports/sram22-wrappers-yosys-elaboration.log
           -p 'read_verilog -sv rtl/lca_sram22_macros.sv; prep -top lca_sram22_128x32; check'
+      - name: Macro-backed secure SRAM independent Yosys elaboration
+        run: >-
+          node --experimental-wasm-exnref tools/run_yosys.mjs
+          -l reports/secure-sram-sram22-yosys-elaboration.log
+          -p 'read_verilog -sv rtl/lca_sram22_macros.sv rtl/lca_secure_sram_sram22.sv; prep -top lca_secure_sram_sram22; check'
       - name: Rev-A core independent Yosys elaboration
         run: >-
           node --experimental-wasm-exnref tools/run_yosys.mjs
