@@ -22,6 +22,7 @@ ROOT = Path(__file__).resolve().parents[1]
 TOOLCHAIN = ROOT / "physical" / "openframe" / "toolchain.json"
 OPENLANE_OVERLAY = ROOT / "physical" / "openframe" / "openlane"
 SRAM_VENDOR = ROOT / "physical" / "sram22" / "vendor"
+STA_BLACKBOXES = ROOT / "physical" / "openframe" / "sta" / "sram22_blackboxes.v"
 
 
 def run(*args: str, cwd: Path | None = None) -> None:
@@ -85,8 +86,15 @@ def main() -> int:
     gds_dst = workspace / "gds" / "lca"
     lib_dst = workspace / "lib" / "lca"
 
+    # The upstream SRAM22 Verilog remains available, checksum-identical, for
+    # simulation/reproducibility evidence. Physical synthesis/STA instead uses
+    # a structural blackbox declaration because OpenSTA cannot parse the
+    # behavioral memory model as a gate-level macro netlist.
+    sta_blackbox_dst = vendor_verilog / "sram22_blackboxes_sta.v"
+    copy(STA_BLACKBOXES, sta_blackbox_dst)
+
     macro_names = ("sram22_128x32m4w8", "sram22_2048x32m8w8")
-    staged_files: list[Path] = []
+    staged_files: list[Path] = [sta_blackbox_dst]
     for macro in macro_names:
         base = SRAM_VENDOR / macro
         for suffix, target_dir in ((".v", vendor_verilog), (".lef", lef_dst)):
