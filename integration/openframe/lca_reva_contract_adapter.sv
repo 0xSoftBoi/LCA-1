@@ -47,6 +47,25 @@ module lca_reva_contract_adapter #(
     localparam [15:0] EXT_SELF_TEST    = 16'h007f;
 
     reg [15:0] translated_data;
+    wire [15:0] core_host_d_o;
+    wire        core_rsp_valid;
+    reg         command_read_pending_q;
+
+    function automatic [15:0] internal_command_to_external;
+        input [15:0] value;
+        begin
+            case (value[7:0])
+                8'h00: internal_command_to_external = EXT_MLKEM_NTT;
+                8'h01: internal_command_to_external = EXT_MLKEM_INTT;
+                8'h02: internal_command_to_external = EXT_MLDSA_NTT;
+                8'h03: internal_command_to_external = EXT_MLDSA_INTT;
+                8'h04: internal_command_to_external = EXT_KECCAK;
+                8'h05: internal_command_to_external = EXT_MOD_ARITH;
+                8'h07: internal_command_to_external = EXT_SELF_TEST;
+                default: internal_command_to_external = 16'hffff;
+            endcase
+        end
+    endfunction
 
     always @* begin
         translated_data = host_d_i;
@@ -82,6 +101,23 @@ module lca_reva_contract_adapter #(
         end
     end
 
+    // The core has one outstanding response maximum, so a single bit is enough
+    // to remember whether the accepted read requires command readback mapping.
+    always @(posedge clk_i or negedge rst_ni) begin
+        if (!rst_ni) begin
+            command_read_pending_q <= 1'b0;
+        end else begin
+            if (req_valid_i && req_ready_o && !req_write_i && host_addr_i == CSR_COMMAND)
+                command_read_pending_q <= 1'b1;
+            if (core_rsp_valid && rsp_ready_i)
+                command_read_pending_q <= 1'b0;
+        end
+    end
+
+    assign host_d_o = command_read_pending_q ?
+                      internal_command_to_external(core_host_d_o) : core_host_d_o;
+    assign rsp_valid_o = core_rsp_valid;
+
     lca_reva_core #(.SRAM_WORDS(SRAM_WORDS)) u_core (
         .clk_i(clk_i),
         .rst_ni(rst_ni),
@@ -89,14 +125,14 @@ module lca_reva_contract_adapter #(
         .zeroize_req_i(zeroize_req_i),
         .mask_rev_i(mask_rev_i),
         .host_d_i(translated_data),
-        .host_d_o(host_d_o),
+        .host_d_o(core_host_d_o),
         .host_d_oe_o(host_d_oe_o),
         .host_addr_i(host_addr_i),
         .req_valid_i(req_valid_i),
         .req_ready_o(req_ready_o),
         .req_write_i(req_write_i),
         .req_last_i(req_last_i),
-        .rsp_valid_o(rsp_valid_o),
+        .rsp_valid_o(core_rsp_valid),
         .rsp_ready_i(rsp_ready_i),
         .rsp_last_o(rsp_last_o),
         .irq_o(irq_o),
