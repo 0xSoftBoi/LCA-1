@@ -1,0 +1,66 @@
+{
+  "DESIGN_NAME": "lca_reva_core_sram22",
+  "VERILOG_DEFINES": "LCA_PHYSICAL_SRAM22 USE_POWER_PINS",
+  "VERILOG_FILES": [
+    "dir::../../verilog/rtl/lca/lca_sram22_macros.sv",
+    "dir::../../verilog/rtl/lca/lca_ntt_accel_sram22.sv",
+    "dir::../../verilog/rtl/lca/lca_secure_sram_sram22.sv",
+    "dir::../../verilog/rtl/lca/lca_keccak_f1600.sv",
+    "dir::../../verilog/rtl/lca_integration/lca_reva_core_sram22.sv"
+  ],
+  "VERILOG_INCLUDE_DIRS": [
+    "dir::../../verilog/rtl/lca"
+  ],
+  "VERILOG_FILES_BLACKBOX": [
+    "dir::../../verilog/rtl/lca_vendor/sram22_blackboxes_sta.v"
+  ],
+  "MACROS": {
+    "sram22_128x32m4w8": {
+      "gds": ["dir::../../gds/lca/sram22_128x32m4w8.gds"],
+      "lef": ["dir::../../lef/lca/sram22_128x32m4w8.lef"],
+      "spice": ["dir::../../spice/lca/sram22_128x32m4w8.spice"],
+      "lib": {
+        "*_tt_025C_1v80": ["dir::../../lib/lca/sram22_128x32m4w8_tt_025C_1v80.lib"],
+        "*_ss_100C_1v60": ["dir::../../lib/lca/sram22_128x32m4w8_ss_100C_1v60.lib"],
+        "*_ff_n40C_1v95": ["dir::../../lib/lca/sram22_128x32m4w8_ff_n40C_1v95.lib"]
+      },
+      "instances": {}
+    },
+    "sram22_2048x32m8w8": {
+      "gds": ["dir::../../gds/lca/sram22_2048x32m8w8.gds"],
+      "lef": ["dir::../../lef/lca/sram22_2048x32m8w8.lef"],
+      "spice": ["dir::../../spice/lca/sram22_2048x32m8w8.spice"],
+      "lib": {
+        "*_tt_025C_1v80": ["dir::../../lib/lca/sram22_2048x32m8w8_tt_025C_1v80.lib"],
+        "*_ss_100C_1v60": ["dir::../../lib/lca/sram22_2048x32m8w8_ss_100C_1v60.lib"],
+        "*_ff_n40C_1v95": ["dir::../../lib/lca/sram22_2048x32m8w8_ff_n40C_1v95.lib"]
+      },
+      "instances": {}
+    }
+  },
+  "CLOCK_PORT": "clk_i",
+  "CLOCK_PERIOD": 40.0,
+  "SYNTH_USE_PG_PINS_DEFINES": "USE_POWER_PINS",
+  "VDD_NETS": ["vdd"],
+  "GND_NETS": ["vss"],
+  "FP_SIZING": "absolute",
+  "DIE_AREA": "0 0 2600 2600",
+  "CORE_AREA": "40 40 2560 2560",
+  "PL_TARGET_DENSITY_PCT": 38,
+  "PL_MACRO_HALO": [25, 25],
+  "PL_MACRO_CHANNEL": [50, 50],
+  "FP_PDN_CORE_RING": 1,
+  "FP_PDN_CORE_RING_VWIDTH": 6.4,
+  "FP_PDN_CORE_RING_HWIDTH": 6.4,
+  "FP_PDN_VWIDTH": 3.2,
+  "FP_PDN_HWIDTH": 3.2,
+  "FP_PDN_VSPACING": 1.6,
+  "FP_PDN_HSPACING": 1.6,
+  "GRT_REPAIR_ANTENNAS": 1,
+  "RUN_HEURISTIC_DIODE_INSERTION": 1,
+  "RUN_IRDROP_REPORT": 1,
+  "RUN_LVS": 1,
+  "MAX_TRANSITION_CONSTRAINT": 0.5,
+  "QUIT_ON_SYNTH_CHECKS": 1,
+  "ERROR_ON_NL_ASSIGN_STATEMENTS": 1
+}
