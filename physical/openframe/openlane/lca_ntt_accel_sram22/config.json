@@ -5,6 +5,9 @@
     "dir::../../verilog/rtl/lca/lca_sram22_macros.sv",
     "dir::../../verilog/rtl/lca/lca_ntt_accel_sram22.sv"
   ],
+  "VERILOG_INCLUDE_DIRS": [
+    "dir::../../verilog/rtl/lca"
+  ],
   "VERILOG_FILES_BLACKBOX": [
     "dir::../../verilog/rtl/lca_vendor/sram22_128x32m4w8.v"
   ],
