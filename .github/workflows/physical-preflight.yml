@@ -10,6 +10,7 @@ on:
       - "tools/check_physical_contract.py"
       - "tools/fetch_sram22_macros.py"
       - "verification/tb_reva_contract_adapter.sv"
+      - "verification/tb_reva_core_sram22.sv"
       - "verification/openframe_shell_stubs.v"
       - ".github/workflows/physical-preflight.yml"
   workflow_dispatch:
@@ -27,7 +28,7 @@ env:
 jobs:
   macro-and-shell-contract:
     runs-on: ubuntu-24.04
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -58,6 +59,22 @@ jobs:
             integration/openframe/lca_reva_contract_adapter.sv \
             verification/tb_reva_contract_adapter.sv
           vvp reports/reva_contract_adapter.vvp | tee reports/reva-contract-adapter.txt
+      - name: Physical Rev-A core registered-memory regression
+        run: |
+          iverilog -g2012 -Irtl -s lca_reva_core_sram22_tb \
+            -o reports/reva_core_sram22.vvp \
+            rtl/lca_sram22_macros.sv rtl/lca_ntt_accel_sram22.sv \
+            rtl/lca_keccak_f1600.sv rtl/lca_secure_sram_sram22.sv \
+            integration/openframe/lca_reva_core_sram22.sv \
+            verification/tb_reva_core_sram22.sv
+          vvp reports/reva_core_sram22.vvp | tee reports/reva-core-sram22.txt
+      - name: Physical Rev-A core elaboration
+        run: |
+          iverilog -g2012 -Irtl -s lca_reva_core_sram22 \
+            -o reports/reva_core_sram22_elab.vvp \
+            rtl/lca_sram22_macros.sv rtl/lca_ntt_accel_sram22.sv \
+            rtl/lca_keccak_f1600.sv rtl/lca_secure_sram_sram22.sv \
+            integration/openframe/lca_reva_core_sram22.sv
       - name: OpenFrame wrapper elaboration
         run: |
           iverilog -g2012 -DOPENFRAME_IO_PADS=44 -Irtl -s openframe_project_wrapper \
