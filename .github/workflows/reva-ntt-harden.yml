@@ -1,0 +1,102 @@
+# SPDX-License-Identifier: Apache-2.0
+#
+# Macro-aware SKY130 hardening of the Rev-A NTT candidate. This is a physical
+# implementation estimate using pinned open SRAM22 collateral, not silicon or
+# foundry acceptance evidence.
+name: reva-ntt-harden
+
+on:
+  pull_request:
+    paths:
+      - "rtl/lca_ntt_accel.sv"
+      - "integration/openframe/lca_sram_1rw.sv"
+      - "hardening/reva_ntt/**"
+      - ".github/workflows/reva-ntt-harden.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lca1-reva-ntt-harden-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  harden-reva-ntt:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Fetch pinned SRAM22 collateral
+        run: python3 hardening/reva_ntt/fetch_sram22.py
+
+      - name: Record collateral digests
+        run: |
+          mkdir -p reports
+          find hardening/reva_ntt/macros -type f -print0 | sort -z | xargs -0 sha256sum \
+            | tee reports/reva-ntt-sram22-sha256.txt
+
+      - name: Record LibreLane version
+        run: |
+          docker run --rm ghcr.io/librelane/librelane:3.0.9 \
+            python3 -m librelane --version | tee reports/reva-ntt-librelane-version.txt
+
+      - name: Harden Rev-A NTT with two SRAM22 macros
+        run: |
+          docker run --rm -v "$GITHUB_WORKSPACE":/work \
+            -w /work/hardening/reva_ntt \
+            ghcr.io/librelane/librelane:3.0.9 \
+            python3 -m librelane --pdk-root /work/.ciel-pdk --run-tag ci config.json
+
+      - name: Summarize headline metrics
+        if: always()
+        working-directory: hardening/reva_ntt
+        run: |
+          python3 - <<'EOF' | tee ../../reports/reva-ntt-metrics-summary.md | tee -a "$GITHUB_STEP_SUMMARY"
+          import json
+          from pathlib import Path
+
+          metrics_path = Path("runs/ci/final/metrics.json")
+          print("## Rev-A NTT + 2x SRAM22 128x32 SKY130 hardening")
+          print()
+          if not metrics_path.exists():
+              print("No final metrics.json was produced; inspect the archived run logs.")
+              raise SystemExit(0)
+
+          metrics = json.loads(metrics_path.read_text())
+          keys = [
+              "design__instance__count",
+              "design__instance__area",
+              "design__die__area",
+              "timing__setup__ws",
+              "timing__hold__ws",
+              "clock__skew__worst_setup",
+              "power__total",
+              "route__drc_errors",
+              "magic__drc_error__count",
+              "design__lvs_error__count",
+          ]
+          print("Clock constraint: 40 ns (25 MHz). Macro source is pinned in fetch_sram22.py.")
+          print()
+          print("| metric | value |")
+          print("|---|---:|")
+          for key in keys:
+              if key in metrics:
+                  print(f"| {key} | {metrics[key]} |")
+          EOF
+
+      - name: Archive macro hardening evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: lca1-reva-ntt-harden-${{ github.sha }}
+          path: |
+            hardening/reva_ntt/runs/ci
+            reports/reva-ntt-*.txt
+            reports/reva-ntt-*.md
+          if-no-files-found: warn
+          retention-days: 90
