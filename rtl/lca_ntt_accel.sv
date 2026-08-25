@@ -132,6 +132,10 @@ module lca_ntt_accel (
     endfunction
 
     assign coeff_rdata_o = coeff_read(coeff_addr_i);
+    // Materialize the function result before slicing. This is equivalent to
+    // coeff_read(scale_index_q)[15:0], but is accepted by Icarus, Yosys and
+    // Verilator consistently.
+    wire signed [31:0] scale_value = coeff_read(scale_index_q);
 
     // Current butterfly arithmetic. ML-KEM assignments explicitly narrow to
     // 16 bits to reproduce the clean C implementation's int16_t semantics.
@@ -327,21 +331,21 @@ module lca_ntt_accel (
                         if (^scale_index_q) begin
                             if (command_q == CMD_MLDSA_INTT) begin
                                 coeff_bank1_q[scale_index_q[6:0]] <= mldsa_montgomery_reduce(
-                                    64'sd41978 * coeff_read(scale_index_q)
+                                    64'sd41978 * scale_value
                                 );
                             end else begin
                                 coeff_bank1_q[scale_index_q[6:0]] <= sign_extend_16(
-                                    mlkem_montgomery_reduce(32'sd1441 * $signed(coeff_read(scale_index_q)[15:0]))
+                                    mlkem_montgomery_reduce(32'sd1441 * $signed(scale_value[15:0]))
                                 );
                             end
                         end else begin
                             if (command_q == CMD_MLDSA_INTT) begin
                                 coeff_bank0_q[scale_index_q[6:0]] <= mldsa_montgomery_reduce(
-                                    64'sd41978 * coeff_read(scale_index_q)
+                                    64'sd41978 * scale_value
                                 );
                             end else begin
                                 coeff_bank0_q[scale_index_q[6:0]] <= sign_extend_16(
-                                    mlkem_montgomery_reduce(32'sd1441 * $signed(coeff_read(scale_index_q)[15:0]))
+                                    mlkem_montgomery_reduce(32'sd1441 * $signed(scale_value[15:0]))
                                 );
                             end
                         end
