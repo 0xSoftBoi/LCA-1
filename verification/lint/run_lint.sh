@@ -11,13 +11,9 @@
 #
 #   gating       the E1 evidence slice (lca_modmul + lca_butterfly), -Wall and
 #                warning-free after narrow, documented waivers;
-#   elaboration  the Rev-A NTT candidate, which must elaborate with no errors;
-#                reviewed arithmetic-width warnings may remain non-fatal until
-#                the NTT engine formally enters the claims-bearing chain;
+#   elaboration  the Rev-A NTT candidate plus its OpenFrame SRAM adapter, which
+#                must elaborate with no errors;
 #   advisory     all remaining rtl/*.sv, printed but non-gating.
-#
-# Exit codes: 0 clean, 1 gating/elaboration failure. A missing Verilator still
-# exits 0 for local developer convenience; CI installs it explicitly.
 
 set -u -o pipefail
 
@@ -29,6 +25,7 @@ RTL_DIR="$REPO_ROOT/rtl"
 E1_SOURCES=("$RTL_DIR/lca_butterfly.sv" "$RTL_DIR/lca_modmul.sv")
 E1_TOP=lca_butterfly
 NTT_SOURCE="$RTL_DIR/lca_ntt_accel.sv"
+NTT_SRAM="$REPO_ROOT/integration/openframe/lca_sram_1rw.sv"
 NTT_TOP=lca_ntt_accel
 
 if ! command -v verilator >/dev/null 2>&1; then
@@ -57,10 +54,7 @@ fi
 echo
 
 echo "== elaboration tier: Rev-A NTT candidate (top $NTT_TOP) =="
-# Warnings remain visible but non-fatal here. The purpose of this gate is to
-# prevent a repeat of BLKLOOPINIT: if the module cannot be elaborated by the
-# independent front-end, it cannot enter coverage or the Rev-A evidence chain.
-if verilator "${VFLAGS[@]}" --Wno-fatal --top-module "$NTT_TOP" "$NTT_SOURCE"; then
+if verilator "${VFLAGS[@]}" --Wno-fatal --top-module "$NTT_TOP" "$NTT_SRAM" "$NTT_SOURCE"; then
     echo "PASS: Rev-A NTT candidate elaborates under Verilator."
 else
     echo "FAIL: Rev-A NTT candidate does not elaborate under Verilator."

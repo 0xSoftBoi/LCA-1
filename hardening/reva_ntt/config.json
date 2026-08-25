@@ -1,0 +1,56 @@
+{
+  "DESIGN_NAME": "lca_ntt_accel",
+  "PDK": "sky130A",
+  "STD_CELL_LIBRARY": "sky130_fd_sc_hd",
+  "VERILOG_FILES": [
+    "dir::../../integration/openframe/lca_sram_1rw.sv",
+    "dir::../../rtl/lca_ntt_accel.sv"
+  ],
+  "VERILOG_INCLUDE_DIRS": [
+    "dir::../../rtl"
+  ],
+  "VERILOG_DEFINES": [
+    "LCA_USE_SRAM22"
+  ],
+  "CLOCK_PORT": "clk_i",
+  "CLOCK_PERIOD": 40.0,
+  "FP_SIZING": "absolute",
+  "DIE_AREA": [0, 0, 1100, 650],
+  "CORE_AREA": [10, 10, 1090, 640],
+  "FP_CORE_UTIL": 30,
+  "PL_TARGET_DENSITY_PCT": 40,
+  "FP_MACRO_HORIZONTAL_HALO": 12,
+  "FP_MACRO_VERTICAL_HALO": 12,
+  "STA_MACRO_PRIORITIZE_NL": false,
+  "PDN_CONNECT_MACROS_TO_GRID": true,
+  "PDN_MACRO_CONNECTIONS": [
+    ".*u_macro.* VPWR VGND vdd vss"
+  ],
+  "MACROS": {
+    "sram22_128x32m4w8": {
+      "gds": [
+        "dir::macros/sram22_128x32m4w8/sram22_128x32m4w8.gds"
+      ],
+      "lef": [
+        "dir::macros/sram22_128x32m4w8/sram22_128x32m4w8.lef"
+      ],
+      "vh": [
+        "dir::sram22_128x32m4w8_bb.v"
+      ],
+      "spice": [
+        "dir::macros/sram22_128x32m4w8/sram22_128x32m4w8.spice"
+      ],
+      "lib": {
+        "*_tt_025C_1v80": [
+          "dir::macros/sram22_128x32m4w8/sram22_128x32m4w8_tt_025C_1v80.lib"
+        ],
+        "*_ss_100C_1v60": [
+          "dir::macros/sram22_128x32m4w8/sram22_128x32m4w8_ss_100C_1v60.lib"
+        ],
+        "*_ff_n40C_1v95": [
+          "dir::macros/sram22_128x32m4w8/sram22_128x32m4w8_ff_n40C_1v95.lib"
+        ]
+      }
+    }
+  }
+}
