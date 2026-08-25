@@ -63,7 +63,7 @@ jobs:
 
   rtl-formal-synthesis:
     runs-on: ubuntu-24.04
-    timeout-minutes: 25
+    timeout-minutes: 30
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -105,6 +105,13 @@ jobs:
             -o reports/ntt_protocol.vvp \
             rtl/lca_ntt_accel.sv verification/tb_ntt_protocol.sv
           vvp reports/ntt_protocol.vvp | tee reports/ntt-protocol.txt
+      - name: SRAM22 NTT four-command differential regression
+        run: |
+          iverilog -g2012 -Irtl -s lca_ntt_sram22_differential_tb \
+            -o reports/ntt_sram22_differential.vvp \
+            rtl/lca_sram22_macros.sv rtl/lca_ntt_accel.sv rtl/lca_ntt_accel_sram22.sv \
+            verification/tb_ntt_sram22_differential.sv
+          vvp reports/ntt_sram22_differential.vvp | tee reports/ntt-sram22-differential.txt
       - name: Rev-A core protocol regression
         run: |
           iverilog -g2012 -Irtl -s lca_reva_core_smoke_tb \
@@ -117,6 +124,11 @@ jobs:
           node --experimental-wasm-exnref tools/run_yosys.mjs
           -l reports/ntt-yosys-elaboration.log
           -p 'read_verilog -sv -Irtl rtl/lca_ntt_accel.sv; prep -top lca_ntt_accel; check'
+      - name: SRAM22 NTT independent Yosys elaboration
+        run: >-
+          node --experimental-wasm-exnref tools/run_yosys.mjs
+          -l reports/ntt-sram22-yosys-elaboration.log
+          -p 'read_verilog -sv -Irtl rtl/lca_sram22_macros.sv rtl/lca_ntt_accel_sram22.sv; prep -top lca_ntt_accel_sram22; check'
       - name: SRAM22 wrappers independent Yosys elaboration
         run: >-
           node --experimental-wasm-exnref tools/run_yosys.mjs
