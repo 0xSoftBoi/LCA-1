@@ -42,6 +42,19 @@ All notable changes are recorded here. Versions follow `VERSIONING.md`.
 - MCY mutation-coverage project for the arithmetic slice
   (`verification/mutation/`) with a pinned nightly workflow; reported kill
   ratio is a monitored lower-bound signal, not an E1 gate.
+- `docs/DEFENSIVE_PUBLICATION.md`: a deliberate defensive publication
+  placing five concepts into the public prior art as of 2026-08-16, after
+  a patent prior-art search found four of five candidates already
+  anticipated. The project **forgoes patent protection** on the disclosed
+  subject matter; the choice is intentional and irreversible. Disclosures
+  are written to be enabling, and each names the prior art that already
+  anticipates it so the remaining delta is unambiguous. The substantive
+  entry is the equivalence-filtered mutation-coverage method: netlist
+  mutation plus differential corpus replay plus a two-engine
+  (reachability-aware SEC, then temporal induction) equivalence oracle
+  correcting the coverage denominator, with the four-way classification
+  and the cross-layer single-point verification detection that found this
+  repository's own fail-closed gap.
 - Five supply-chain tiers improved in parallel, with three results that
   contradicted this repository's own prior claims and are recorded as
   corrections rather than quietly dropped:

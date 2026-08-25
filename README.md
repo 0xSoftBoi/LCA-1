@@ -146,7 +146,9 @@ Start with:
     baseline and its limits;
 14. `docs/SRAM_DECISION.md`, `docs/FAST_REDUCTION.md`,
     `docs/SUPPLY_CHAIN.md` - memory fit evidence, the pipelined-reduction
-    candidate, and provenance artifacts.
+    candidate, and provenance artifacts;
+15. `docs/DEFENSIVE_PUBLICATION.md` - subject matter deliberately placed in
+    the public prior art, with the patent protection forgone on it.
 
 ## License, adoption, and citation
 
