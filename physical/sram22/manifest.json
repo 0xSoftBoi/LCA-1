@@ -13,6 +13,7 @@
         "verilog": {"path": "sram22_128x32m4w8/sram22_128x32m4w8.v", "git_blob_sha1": "c5319f5d6e44cfe81a8fe279e67feab04da46f1a"},
         "lef": {"path": "sram22_128x32m4w8/sram22_128x32m4w8.lef", "git_blob_sha1": "7e2448ea9337f61872067142d9f63f5924460159"},
         "gds_gz": {"path": "sram22_128x32m4w8/sram22_128x32m4w8.gds.gz", "git_blob_sha1": "eecbb17fec7e20fd93bbee88f6a5d6f22036237d"},
+        "spice": {"path": "sram22_128x32m4w8/sram22_128x32m4w8.spice", "git_blob_sha1": "edad247e769a7c8204ecc192ef8e6e867a6b3c42"},
         "lib_tt": {"path": "sram22_128x32m4w8/sram22_128x32m4w8_tt_025C_1v80.lib", "git_blob_sha1": "f075318607ad7db1c4f4922ab03fe3622e7d2a9e"},
         "lib_ss": {"path": "sram22_128x32m4w8/sram22_128x32m4w8_ss_100C_1v60.lib", "git_blob_sha1": "69314ddaebd545ea3a2b8d654afaaf9f002c4639"},
         "lib_ff": {"path": "sram22_128x32m4w8/sram22_128x32m4w8_ff_n40C_1v95.lib", "git_blob_sha1": "9979fdfc41fb1f54d5ad58f05631403d195041ca"}
@@ -26,6 +27,7 @@
         "verilog": {"path": "sram22_2048x32m8w8/sram22_2048x32m8w8.v", "git_blob_sha1": "adfe7328344cda97b781a9dd870d4ed781fbbeee"},
         "lef": {"path": "sram22_2048x32m8w8/sram22_2048x32m8w8.lef", "git_blob_sha1": "fd37db4fd2d1ce11264d0ac9c7e39e3e515c9f4d"},
         "gds_gz": {"path": "sram22_2048x32m8w8/sram22_2048x32m8w8.gds.gz", "git_blob_sha1": "2c153b59f52e402ef594d14f7a34b3753a0f8804"},
+        "spice": {"path": "sram22_2048x32m8w8/sram22_2048x32m8w8.spice", "git_blob_sha1": "5b86dd9f8070ff880082793b8a2e900e3d59487c"},
         "lib_tt": {"path": "sram22_2048x32m8w8/sram22_2048x32m8w8_tt_025C_1v80.lib", "git_blob_sha1": "4da504cf5f96441086e9ff7afc06900ec6aebb1c"},
         "lib_ss": {"path": "sram22_2048x32m8w8/sram22_2048x32m8w8_ss_100C_1v60.lib", "git_blob_sha1": "263a25d2c42a089a308c9a9bfd693fbd4a7e03b2"},
         "lib_ff": {"path": "sram22_2048x32m8w8/sram22_2048x32m8w8_ff_n40C_1v95.lib", "git_blob_sha1": "a8e1ae1b468c08a1a28b63b7914db2e2377df9e3"}
