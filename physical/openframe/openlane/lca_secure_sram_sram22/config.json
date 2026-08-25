@@ -6,7 +6,7 @@
     "dir::../../verilog/rtl/lca/lca_secure_sram_sram22.sv"
   ],
   "VERILOG_FILES_BLACKBOX": [
-    "dir::../../verilog/rtl/lca_vendor/sram22_2048x32m8w8.v"
+    "dir::../../verilog/rtl/lca_vendor/sram22_blackboxes_sta.v"
   ],
   "EXTRA_LEFS": [
     "dir::../../lef/lca/sram22_2048x32m8w8.lef"
