@@ -49,7 +49,10 @@ def main() -> int:
         failures.append("macro area fraction drift")
 
     for family in manifest["macros"].values():
-        required = {"verilog", "lef", "gds_gz", "lib_tt", "lib_ss", "lib_ff"}
+        # Physical closure requires a simulation model, abstract/full layout,
+        # transistor netlist for LVS, and characterized timing at all three
+        # Rev-A signoff corners. Missing SPICE is not a waivable condition.
+        required = {"verilog", "lef", "gds_gz", "spice", "lib_tt", "lib_ss", "lib_ff"}
         missing = required - set(family["views"])
         if missing:
             failures.append(f"{family['name']} missing views: {sorted(missing)}")
