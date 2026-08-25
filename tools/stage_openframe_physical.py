@@ -73,18 +73,32 @@ def main() -> int:
         run(sys.executable, str(ROOT / "tools" / "fetch_sram22_macros.py"))
 
     rtl_dst = workspace / "verilog" / "rtl" / "lca"
+    staged_files: list[Path] = []
     for name in (
         "lca_sram22_macros.sv",
         "lca_ntt_accel_sram22.sv",
         "lca_ntt_zetas.svh",
         "lca_secure_sram_sram22.sv",
+        "lca_keccak_f1600.sv",
     ):
-        copy(ROOT / "rtl" / name, rtl_dst / name)
+        dst = rtl_dst / name
+        copy(ROOT / "rtl" / name, dst)
+        staged_files.append(dst)
+
+    # Physical-core and exact-shell integration RTL is staged separately from
+    # the repository's generic rtl/ directory so it is explicit what enters the
+    # fabrication hierarchy.
+    integration_dst = workspace / "verilog" / "rtl" / "lca_integration"
+    for name in ("lca_reva_core_sram22.sv", "openframe_project_wrapper.v"):
+        dst = integration_dst / name
+        copy(ROOT / "integration" / "openframe" / name, dst)
+        staged_files.append(dst)
 
     vendor_verilog = workspace / "verilog" / "rtl" / "lca_vendor"
     lef_dst = workspace / "lef" / "lca"
     gds_dst = workspace / "gds" / "lca"
     lib_dst = workspace / "lib" / "lca"
+    spice_dst = workspace / "spice" / "lca"
 
     # The upstream SRAM22 Verilog remains available, checksum-identical, for
     # simulation/reproducibility evidence. Physical synthesis/STA instead uses
@@ -92,12 +106,16 @@ def main() -> int:
     # behavioral memory model as a gate-level macro netlist.
     sta_blackbox_dst = vendor_verilog / "sram22_blackboxes_sta.v"
     copy(STA_BLACKBOXES, sta_blackbox_dst)
+    staged_files.append(sta_blackbox_dst)
 
     macro_names = ("sram22_128x32m4w8", "sram22_2048x32m8w8")
-    staged_files: list[Path] = [sta_blackbox_dst]
     for macro in macro_names:
         base = SRAM_VENDOR / macro
-        for suffix, target_dir in ((".v", vendor_verilog), (".lef", lef_dst)):
+        for suffix, target_dir in (
+            (".v", vendor_verilog),
+            (".lef", lef_dst),
+            (".spice", spice_dst),
+        ):
             src = base / f"{macro}{suffix}"
             dst = target_dir / src.name
             copy(src, dst)
