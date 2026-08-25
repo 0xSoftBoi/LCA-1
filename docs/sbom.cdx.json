@@ -95,6 +95,14 @@
         },
         {
           "name": "lca1:source",
+          "value": ".github/workflows/physical-harden.yml"
+        },
+        {
+          "name": "lca1:source",
+          "value": ".github/workflows/physical-preflight.yml"
+        },
+        {
+          "name": "lca1:source",
           "value": ".github/workflows/scorecard.yml"
         },
         {
@@ -191,6 +199,14 @@
         },
         {
           "name": "lca1:source",
+          "value": ".github/workflows/physical-harden.yml"
+        },
+        {
+          "name": "lca1:source",
+          "value": ".github/workflows/physical-preflight.yml"
+        },
+        {
+          "name": "lca1:source",
           "value": ".github/workflows/supply-chain.yml"
         }
       ],
@@ -244,6 +260,14 @@
         {
           "name": "lca1:source",
           "value": ".github/workflows/mutation.yml"
+        },
+        {
+          "name": "lca1:source",
+          "value": ".github/workflows/physical-harden.yml"
+        },
+        {
+          "name": "lca1:source",
+          "value": ".github/workflows/physical-preflight.yml"
         },
         {
           "name": "lca1:source",
@@ -497,7 +521,7 @@
         }
       ],
       "type": "device",
-      "version": "2026-08-13"
+      "version": "2026-08-25"
     },
     {
       "bom-ref": "hardware/harness/openframe@ca732a645568d89efc9db3052eadeca47c60cf4d",
@@ -1023,6 +1047,10 @@
         {
           "name": "lca1:source",
           "value": ".github/workflows/mutation.yml"
+        },
+        {
+          "name": "lca1:source",
+          "value": ".github/workflows/physical-preflight.yml"
         }
       ],
       "type": "application"
