@@ -11,13 +11,19 @@
   "VERILOG_FILES_BLACKBOX": [
     "dir::../../verilog/rtl/lca_vendor/sram22_blackboxes_sta.v"
   ],
-  "EXTRA_LEFS": [
-    "dir::../../lef/lca/sram22_128x32m4w8.lef"
-  ],
-  "EXTRA_GDS_FILES": [
-    "dir::../../gds/lca/sram22_128x32m4w8.gds"
-  ],
-  "EXTRA_LIBS": "dir::../../lib/lca/sram22_128x32m4w8_tt_025C_1v80.lib",
+  "MACROS": {
+    "sram22_128x32m4w8": {
+      "gds": ["dir::../../gds/lca/sram22_128x32m4w8.gds"],
+      "lef": ["dir::../../lef/lca/sram22_128x32m4w8.lef"],
+      "spice": ["dir::../../spice/lca/sram22_128x32m4w8.spice"],
+      "lib": {
+        "*_tt_025C_1v80": ["dir::../../lib/lca/sram22_128x32m4w8_tt_025C_1v80.lib"],
+        "*_ss_100C_1v60": ["dir::../../lib/lca/sram22_128x32m4w8_ss_100C_1v60.lib"],
+        "*_ff_n40C_1v95": ["dir::../../lib/lca/sram22_128x32m4w8_ff_n40C_1v95.lib"]
+      },
+      "instances": {}
+    }
+  },
   "CLOCK_PORT": "clk_i",
   "CLOCK_PERIOD": 40.0,
   "SYNTH_USE_PG_PINS_DEFINES": "USE_POWER_PINS",
@@ -38,8 +44,8 @@
   "FP_PDN_HSPACING": 1.6,
   "GRT_REPAIR_ANTENNAS": 1,
   "RUN_HEURISTIC_DIODE_INSERTION": 1,
-  "RUN_IRDROP_REPORT": 0,
-  "RUN_LVS": 0,
+  "RUN_IRDROP_REPORT": 1,
+  "RUN_LVS": 1,
   "MAX_TRANSITION_CONSTRAINT": 0.5,
   "QUIT_ON_SYNTH_CHECKS": 1,
   "ERROR_ON_NL_ASSIGN_STATEMENTS": 1
