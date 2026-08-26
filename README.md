@@ -125,26 +125,29 @@ tests/         Python deterministic, randomized, and manufacturing-contract test
 Start with:
 
 1. `GOAL.md` - the persistent program goal and earned/open gates;
-2. `docs/REV_A_INTEGRATION.md` - the proposed silicon boundary and shell ABI;
-3. `docs/FABRICATION_AND_PACKAGE.md` - the foundry/package handoff state;
-4. `spec/REQUIREMENTS.md` - exact E1 requirements and traceability;
-5. `spec/VERIFICATION_PLAN.md` - evidence layers and proof limits;
-6. `spec/THREAT_MODEL.md` - adversaries, controls, and security non-claims;
-7. `spec/ACCEPTANCE.md` - publication and physical-evidence gates;
-8. `docs/REFERENCES.md` - the standards, literature, and tooling the design
-   traces to;
-9. `docs/RELATED_WORK.md` - the surveyed PQC-hardware landscape and the
-   narrower position this program defends;
-10. `docs/IMPROVEMENT_PLAN.md` - the artifact-backed, per-layer improvement
+2. `docs/S0_PRODUCT_BRIEF.md` - the Suwappu S0 product definition at
+    commercial-product-page completeness, with every line tagged earned,
+    target, open, or undecided and mapped to the gate that would earn it;
+3. `docs/REV_A_INTEGRATION.md` - the proposed silicon boundary and shell ABI;
+4. `docs/FABRICATION_AND_PACKAGE.md` - the foundry/package handoff state;
+5. `spec/REQUIREMENTS.md` - exact E1 requirements and traceability;
+6. `spec/VERIFICATION_PLAN.md` - evidence layers and proof limits;
+7. `spec/THREAT_MODEL.md` - adversaries, controls, and security non-claims;
+8. `spec/ACCEPTANCE.md` - publication and physical-evidence gates;
+9. `docs/REFERENCES.md` - the standards, literature, and tooling the design
+    traces to;
+10. `docs/RELATED_WORK.md` - the surveyed PQC-hardware landscape and the
+    narrower position this program defends;
+11. `docs/IMPROVEMENT_PLAN.md` - the artifact-backed, per-layer improvement
     backlog with sequencing and donor-license audit;
-11. `docs/DEPIN_LANDSCAPE.md` - the surveyed DePIN market, its device-identity
+12. `docs/DEPIN_LANDSCAPE.md` - the surveyed DePIN market, its device-identity
     and attestation patterns, and an explicitly negative assessment of the
     near-term market for hardware post-quantum acceleration;
-12. `docs/MUTATION_ANALYSIS.md` - per-survivor mutation verdicts and the
+13. `docs/MUTATION_ANALYSIS.md` - per-survivor mutation verdicts and the
     fail-closed verification gap they exposed;
-13. `docs/LEAKAGE_METHODOLOGY.md` - the measured fixed-vs-random leakage
+14. `docs/LEAKAGE_METHODOLOGY.md` - the measured fixed-vs-random leakage
     baseline and its limits;
-14. `docs/SRAM_DECISION.md`, `docs/FAST_REDUCTION.md`,
+15. `docs/SRAM_DECISION.md`, `docs/FAST_REDUCTION.md`,
     `docs/SUPPLY_CHAIN.md` - memory fit evidence, the pipelined-reduction
     candidate, and provenance artifacts.
 

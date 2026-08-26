@@ -106,6 +106,15 @@ All notable changes are recorded here. Versions follow `VERSIONING.md`.
   read-only on 2026-08-04 (pin unaffected; successor projects named for any
   future oracle refresh), and the narrower positioning the evidence
   supports.
+- `docs/S0_PRODUCT_BRIEF.md`: the Suwappu S0 product definition written to the
+  completeness a shipping hardware product page publishes — positioning,
+  composed architecture, specification tables, host-software story, security
+  model, non-claims, applications, ecosystem, availability, compliance and
+  support, and an FAQ. Every specification line is tagged EARNED, TARGET, OPEN
+  or TBD, and a publication gate register maps each unearned line to the T0-T7
+  silicon gate, A0-A11 claim gate, or P0-P2 program gate that would earn it.
+  No figure is stated for die area, frequency, power or throughput, because
+  none is measured.
 
 ### Fixed
 
