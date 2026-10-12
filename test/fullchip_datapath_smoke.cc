@@ -179,8 +179,11 @@ void write_ntt_word(p_lca__ntt__accel &top, unsigned int address,
 }
 
 uint32_t read_ntt_word(p_lca__ntt__accel &top, unsigned int address) {
+    // Rev-A NTT storage is synchronous 1RW SRAM. Present the logical address
+    // for one full idle clock before sampling the registered output.
     top.p_coeff__addr__i.set<uint32_t>(address);
-    top.step();
+    top.p_coeff__we__i.set<uint32_t>(0);
+    tick(top);
     return top.p_coeff__rdata__o.get<uint32_t>();
 }
 
@@ -190,7 +193,7 @@ unsigned int run_ntt(p_lca__ntt__accel &top, unsigned int command) {
     tick(top);
     top.p_start__i.set<uint32_t>(0);
     unsigned int cycles = 0;
-    while (top.p_busy__o.get<uint32_t>() != 0 && cycles < 2000) {
+    while (top.p_busy__o.get<uint32_t>() != 0 && cycles < 3000) {
         tick(top);
         ++cycles;
     }

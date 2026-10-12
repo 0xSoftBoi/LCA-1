@@ -50,14 +50,16 @@ module lca_ntt_protocol_tb;
             tick();
             coeff_we_i = 1'b0;
             coeff_wstrb_i = 4'h0;
-            #1;
         end
     endtask
 
     task expect_word(input [7:0] address, input [31:0] value);
         begin
+            // Rev-A SRAM is synchronous 1RW: present the address for one idle
+            // read clock before sampling the registered output.
             coeff_addr_i = address;
-            #1;
+            coeff_we_i = 1'b0;
+            tick();
             if (coeff_rdata_o !== value) begin
                 $display("FAIL: coeff[%0d] expected %08x got %08x", address, value, coeff_rdata_o);
                 $fatal(1);
@@ -66,7 +68,6 @@ module lca_ntt_protocol_tb;
     endtask
 
     initial begin
-        // Reset is control-only; explicit zeroize owns memory destruction.
         repeat (2) tick();
         rst_ni = 1'b1;
         tick();
@@ -78,7 +79,6 @@ module lca_ntt_protocol_tb;
         expect_word(8'd127, 32'h55667788);
         expect_word(8'd255, 32'h99aabbcc);
 
-        // A one-cycle request must launch a complete physical scrub.
         zeroize_i = 1'b1;
         tick();
         zeroize_i = 1'b0;
@@ -96,8 +96,6 @@ module lca_ntt_protocol_tb;
         expect_word(8'd127, 32'd0);
         expect_word(8'd255, 32'd0);
 
-        // A level held high by the top-level scrub controller must not restart
-        // the 256-cycle NTT scrub forever after the first pass completes.
         write_word(8'd17, 32'hdeadbeef);
         zeroize_i = 1'b1;
         tick();
@@ -117,23 +115,25 @@ module lca_ntt_protocol_tb;
         zeroize_i = 1'b0;
         tick();
 
-        // Post-scrub transform smoke: all-zero ML-DSA inverse NTT remains zero
-        // and demonstrates that the controller returns to a usable state.
+        // Two SRAM phases per butterfly plus two phases per inverse scaling
+        // element put ML-DSA INTT below 2,700 cycles. Keep headroom but make a
+        // scheduler regression visible.
         command_i = 2'd1;
         start_i = 1'b1;
         tick();
         start_i = 1'b0;
         cycles = 0;
-        while (busy_o && cycles < 2000) begin
+        while (busy_o && cycles < 3000) begin
             tick();
             cycles = cycles + 1;
         end
         if (busy_o || !done_o) $fatal(1, "post-zeroize ML-DSA INTT did not complete");
+        if (cycles > 2700) $fatal(1, "macro-backed ML-DSA INTT scheduler regressed: %0d cycles", cycles);
         expect_word(8'd0, 32'd0);
         expect_word(8'd127, 32'd0);
         expect_word(8'd255, 32'd0);
 
-        $display("PASS: NTT zeroize is bounded, non-retriggering, fail-closed, and transform state recovers");
+        $display("PASS: NTT uses synchronous 1RW banks; zeroize and transform scheduling recover cleanly, INTT cycles=%0d", cycles);
         $finish;
     end
 endmodule

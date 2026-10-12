@@ -24,6 +24,7 @@ FULLCHIP_RTL := \
 	src/lca_core.v \
 	rtl/lca_host_frontend.sv \
 	rtl/lca_keccak_f1600.sv \
+	integration/openframe/lca_sram_1rw.sv \
 	rtl/lca_ntt_accel.sv \
 	rtl/lca_secure_sram.sv \
 	rtl/lca_chip_top.sv
@@ -173,9 +174,9 @@ $(CXXRTL_DIR)/keccak.cc: rtl/lca_keccak_f1600.sv
 	mkdir -p $(CXXRTL_DIR)
 	$(YOSYS) -q -p 'read_verilog -sv $<; prep -top lca_keccak_f1600; write_cxxrtl $@'
 
-$(CXXRTL_DIR)/ntt.cc: rtl/lca_ntt_accel.sv rtl/lca_ntt_zetas.svh
+$(CXXRTL_DIR)/ntt.cc: integration/openframe/lca_sram_1rw.sv rtl/lca_ntt_accel.sv rtl/lca_ntt_zetas.svh
 	mkdir -p $(CXXRTL_DIR)
-	$(YOSYS) -q -p 'read_verilog -sv -Irtl rtl/lca_ntt_accel.sv; prep -top lca_ntt_accel; write_cxxrtl $@'
+	$(YOSYS) -q -p 'read_verilog -sv -Irtl integration/openframe/lca_sram_1rw.sv rtl/lca_ntt_accel.sv; prep -top lca_ntt_accel; write_cxxrtl $@'
 
 $(CXXRTL_DIR)/mldsa_ntt_ref.o: $(MLDSA_DIR)/ntt.c
 	mkdir -p $(CXXRTL_DIR)
