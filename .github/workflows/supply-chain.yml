@@ -41,6 +41,11 @@ jobs:
         run: python3 --version
       - name: Compile supply-chain tooling
         run: python3 -m compileall -q tools tests
+      - name: Re-derive deterministic SBOM candidate
+        run: |
+          mkdir -p reports/supply-chain
+          python3 tools/gen_sbom.py --output reports/supply-chain/generated-sbom.cdx.json
+          sha256sum reports/supply-chain/generated-sbom.cdx.json | tee reports/supply-chain/generated-sbom.sha256
       - name: Check SBOM drift
         run: python3 tools/gen_sbom.py --check
       - name: Check generated corpus drift
@@ -53,12 +58,15 @@ jobs:
         run: bash tools/verify_reproducible.sh
       - name: SBOM unit tests
         run: python3 -m unittest tests.test_sbom -v
-      - name: Archive the SBOM
+      - name: Archive the SBOM evidence
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: lca1-sbom-${{ github.sha }}
-          path: docs/sbom.cdx.json
+          path: |
+            docs/sbom.cdx.json
+            reports/supply-chain/generated-sbom.cdx.json
+            reports/supply-chain/generated-sbom.sha256
           if-no-files-found: error
           retention-days: 90
 

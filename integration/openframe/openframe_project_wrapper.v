@@ -55,7 +55,23 @@ module openframe_project_wrapper (
     input  [`OPENFRAME_IO_PADS-1:0] gpio_loopback_zero
 );
 
-    wire core_rst_ni = porb_l & resetb_l;
+    wire host_clk = gpio_in[38];
+    wire reset_async_n = porb_l & resetb_l;
+
+    // Fabrication contract: asynchronous assertion, two-flop synchronized
+    // deassertion into the sole functional clock domain.
+    reg reset_sync_meta_q;
+    reg reset_sync_q;
+    always @(posedge host_clk or negedge reset_async_n) begin
+        if (!reset_async_n) begin
+            reset_sync_meta_q <= 1'b0;
+            reset_sync_q <= 1'b0;
+        end else begin
+            reset_sync_meta_q <= 1'b1;
+            reset_sync_q <= reset_sync_meta_q;
+        end
+    end
+    wire core_rst_ni = reset_sync_q;
 
     wire [15:0] host_d_out;
     wire        host_d_oe;
@@ -75,8 +91,10 @@ module openframe_project_wrapper (
     reg [`OPENFRAME_IO_PADS-1:0] gpio_dm1_q;
     reg [`OPENFRAME_IO_PADS-1:0] gpio_dm0_q;
 
-    lca_reva_core u_lca_reva_core (
-        .clk_i(gpio_in[38]),
+    // All OpenFrame traffic enters through the frozen external ABI adapter;
+    // the bounded core's older compact encoding is not visible at the pins.
+    lca_reva_contract_adapter u_lca_reva_core (
+        .clk_i(host_clk),
         .rst_ni(core_rst_ni),
         .tamper_n_i(gpio_in[32]),
         .zeroize_req_i(gpio_in[33]),

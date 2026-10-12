@@ -1,0 +1,105 @@
+name: physical-harden
+
+on:
+  pull_request:
+    paths:
+      - "physical/openframe/**"
+      - "physical/sram22/**"
+      - "rtl/lca_ntt_accel_sram22.sv"
+      - "rtl/lca_secure_sram_sram22.sv"
+      - "rtl/lca_sram22_macros.sv"
+      - "rtl/lca_keccak_f1600.sv"
+      - "integration/openframe/lca_reva_core_sram22.sv"
+      - "integration/openframe/openframe_project_wrapper.v"
+      - "tools/stage_openframe_physical.py"
+      - "tools/fetch_sram22_macros.py"
+      - "tools/summarize_librelane.py"
+      - ".github/workflows/physical-harden.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lca1-physical-harden-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  sky130-physical-closure:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    env:
+      PDK: sky130A
+      CF_LIBRELANE_TAG: CI2511
+      PYTHONHASHSEED: "0"
+    steps:
+      - name: Checkout LCA-1
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12.12"
+      - name: Host capacity
+        run: |
+          docker --version
+          df -h
+          python3 --version
+      - name: Stage pinned OpenFrame and SRAM22 views
+        run: python3 tools/stage_openframe_physical.py --workspace build/openframe
+      - name: Install pinned OpenFrame dependencies
+        working-directory: build/openframe
+        run: |
+          mkdir -p mgmt_core_wrapper dependencies
+          make install
+          make openlane
+          make pdk-with-ciel
+      - name: Harden SRAM22 NTT candidate at 25 MHz
+        working-directory: build/openframe
+        run: make lca_ntt_accel_sram22
+      - name: Harden SRAM22 secure SRAM fabric at 25 MHz
+        working-directory: build/openframe
+        run: make lca_secure_sram_sram22
+      - name: Harden complete Rev-A SRAM22 core at 25 MHz
+        working-directory: build/openframe
+        run: make lca_reva_core_sram22
+      - name: Extract PPA and signoff metrics
+        run: |
+          mkdir -p reports/physical
+          python3 tools/summarize_librelane.py build/openframe \
+            lca_ntt_accel_sram22 lca_secure_sram_sram22 lca_reva_core_sram22 \
+            --output reports/physical/librelane-summary.json
+      - name: Record generated views
+        if: always()
+        run: |
+          mkdir -p reports/physical
+          find build/openframe/gds build/openframe/lef build/openframe/verilog/gl \
+            -maxdepth 2 -type f 2>/dev/null | sort | tee reports/physical/generated-views.txt || true
+          find build/openframe/openlane/lca_ntt_accel_sram22/runs \
+               build/openframe/openlane/lca_secure_sram_sram22/runs \
+               build/openframe/openlane/lca_reva_core_sram22/runs \
+            -type f \( -name 'metrics*.json' -o -name 'metrics*.csv' -o -name '*timing*' -o -name '*area*' -o -name '*lvs*' -o -name '*drc*' -o -name '*irdrop*' \) \
+            2>/dev/null | sort | tee reports/physical/evidence-files.txt || true
+          cp build/openframe/lca1-physical-stage.json reports/physical/ || true
+      - name: Archive hardening evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: lca1-physical-harden-${{ github.sha }}
+          path: |
+            reports/physical/
+            build/openframe/openlane/lca_ntt_accel_sram22/runs/
+            build/openframe/openlane/lca_secure_sram_sram22/runs/
+            build/openframe/openlane/lca_reva_core_sram22/runs/
+            build/openframe/gds/lca_ntt_accel_sram22.gds
+            build/openframe/gds/lca_secure_sram_sram22.gds
+            build/openframe/gds/lca_reva_core_sram22.gds
+            build/openframe/lef/lca_ntt_accel_sram22.lef
+            build/openframe/lef/lca_secure_sram_sram22.lef
+            build/openframe/lef/lca_reva_core_sram22.lef
+            build/openframe/verilog/gl/lca_ntt_accel_sram22.v
+            build/openframe/verilog/gl/lca_secure_sram_sram22.v
+            build/openframe/verilog/gl/lca_reva_core_sram22.v
+          if-no-files-found: warn
+          retention-days: 30

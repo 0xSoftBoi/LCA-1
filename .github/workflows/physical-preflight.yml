@@ -1,0 +1,94 @@
+name: physical-preflight
+
+on:
+  pull_request:
+    paths:
+      - "physical/**"
+      - "rtl/lca_*sram22*.sv"
+      - "integration/openframe/**"
+      - "fabrication/rev_a_release.json"
+      - "tools/check_physical_contract.py"
+      - "tools/fetch_sram22_macros.py"
+      - "verification/tb_reva_contract_adapter.sv"
+      - "verification/tb_reva_core_sram22.sv"
+      - "verification/openframe_shell_stubs.v"
+      - ".github/workflows/physical-preflight.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lca1-physical-preflight-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PYTHONHASHSEED: "0"
+
+jobs:
+  macro-and-shell-contract:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12.12"
+      - name: Install RTL simulator
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends iverilog
+      - name: Validate release and physical contracts
+        run: |
+          python3 tools/validate_fabrication.py
+          python3 tools/check_physical_contract.py
+      - name: Fetch and verify exact SRAM22 physical views
+        run: |
+          rm -rf physical/sram22/vendor
+          python3 tools/fetch_sram22_macros.py
+          python3 tools/fetch_sram22_macros.py --check
+      - name: Frozen LCA-LINK ABI regression
+        run: |
+          mkdir -p reports
+          iverilog -g2012 -Irtl -s lca_reva_contract_adapter_tb \
+            -o reports/reva_contract_adapter.vvp \
+            rtl/lca_ntt_accel.sv rtl/lca_keccak_f1600.sv rtl/lca_secure_sram.sv \
+            integration/openframe/lca_reva_core.sv \
+            integration/openframe/lca_reva_contract_adapter.sv \
+            verification/tb_reva_contract_adapter.sv
+          vvp reports/reva_contract_adapter.vvp | tee reports/reva-contract-adapter.txt
+      - name: Physical Rev-A core registered-memory regression
+        run: |
+          iverilog -g2012 -Irtl -s lca_reva_core_sram22_tb \
+            -o reports/reva_core_sram22.vvp \
+            rtl/lca_sram22_macros.sv rtl/lca_ntt_accel_sram22.sv \
+            rtl/lca_keccak_f1600.sv rtl/lca_secure_sram_sram22.sv \
+            integration/openframe/lca_reva_core_sram22.sv \
+            verification/tb_reva_core_sram22.sv
+          vvp reports/reva_core_sram22.vvp | tee reports/reva-core-sram22.txt
+      - name: Physical Rev-A core elaboration
+        run: |
+          iverilog -g2012 -Irtl -s lca_reva_core_sram22 \
+            -o reports/reva_core_sram22_elab.vvp \
+            rtl/lca_sram22_macros.sv rtl/lca_ntt_accel_sram22.sv \
+            rtl/lca_keccak_f1600.sv rtl/lca_secure_sram_sram22.sv \
+            integration/openframe/lca_reva_core_sram22.sv
+      - name: OpenFrame wrapper elaboration
+        run: |
+          iverilog -g2012 -DOPENFRAME_IO_PADS=44 -Irtl -s openframe_project_wrapper \
+            -o reports/openframe_wrapper.vvp \
+            rtl/lca_ntt_accel.sv rtl/lca_keccak_f1600.sv rtl/lca_secure_sram.sv \
+            integration/openframe/lca_reva_core.sv \
+            integration/openframe/lca_reva_contract_adapter.sv \
+            integration/openframe/openframe_project_wrapper.v \
+            verification/openframe_shell_stubs.v
+      - name: Archive physical preflight evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: lca1-physical-preflight-${{ github.sha }}
+          path: reports/
+          if-no-files-found: warn
+          retention-days: 30

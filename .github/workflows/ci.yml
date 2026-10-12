@@ -35,6 +35,8 @@ jobs:
         run: python3 -m compileall -q model bench tests tools
       - name: Validate fabrication and package release
         run: make fabrication-check
+      - name: Validate Rev-A physical contract
+        run: python3 tools/check_physical_contract.py
       - name: Unit and randomized differential tests
         run: python3 -m unittest discover -s tests -v
       - name: Check generated corpus drift
@@ -61,7 +63,7 @@ jobs:
 
   rtl-formal-synthesis:
     runs-on: ubuntu-24.04
-    timeout-minutes: 25
+    timeout-minutes: 30
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -84,12 +86,32 @@ jobs:
           iverilog -V > reports/iverilog-version.txt 2>&1
       - name: Full-width generated RTL regression
         run: make rtl-test
+      - name: SRAM22 macro contract regression
+        run: |
+          iverilog -g2012 -s lca_sram22_contract_tb \
+            -o reports/sram22_contract.vvp \
+            rtl/lca_sram22_macros.sv verification/tb_sram22_contract.sv
+          vvp reports/sram22_contract.vvp | tee reports/sram22-contract.txt
+      - name: Macro-backed secure SRAM fabric regression
+        run: |
+          iverilog -g2012 -s lca_secure_sram_sram22_tb \
+            -o reports/secure_sram_sram22.vvp \
+            rtl/lca_sram22_macros.sv rtl/lca_secure_sram_sram22.sv \
+            verification/tb_secure_sram_sram22.sv
+          vvp reports/secure_sram_sram22.vvp | tee reports/secure-sram-sram22.txt
       - name: NTT zeroize and recovery protocol regression
         run: |
           iverilog -g2012 -Irtl -s lca_ntt_protocol_tb \
             -o reports/ntt_protocol.vvp \
             rtl/lca_ntt_accel.sv verification/tb_ntt_protocol.sv
           vvp reports/ntt_protocol.vvp | tee reports/ntt-protocol.txt
+      - name: SRAM22 NTT four-command differential regression
+        run: |
+          iverilog -g2012 -Irtl -s lca_ntt_sram22_differential_tb \
+            -o reports/ntt_sram22_differential.vvp \
+            rtl/lca_sram22_macros.sv rtl/lca_ntt_accel.sv rtl/lca_ntt_accel_sram22.sv \
+            verification/tb_ntt_sram22_differential.sv
+          vvp reports/ntt_sram22_differential.vvp | tee reports/ntt-sram22-differential.txt
       - name: Rev-A core protocol regression
         run: |
           iverilog -g2012 -Irtl -s lca_reva_core_smoke_tb \
@@ -102,6 +124,21 @@ jobs:
           node --experimental-wasm-exnref tools/run_yosys.mjs
           -l reports/ntt-yosys-elaboration.log
           -p 'read_verilog -sv -Irtl rtl/lca_ntt_accel.sv; prep -top lca_ntt_accel; check'
+      - name: SRAM22 NTT independent Yosys elaboration
+        run: >-
+          node --experimental-wasm-exnref tools/run_yosys.mjs
+          -l reports/ntt-sram22-yosys-elaboration.log
+          -p 'read_verilog -sv -Irtl rtl/lca_sram22_macros.sv rtl/lca_ntt_accel_sram22.sv; prep -top lca_ntt_accel_sram22; check'
+      - name: SRAM22 wrappers independent Yosys elaboration
+        run: >-
+          node --experimental-wasm-exnref tools/run_yosys.mjs
+          -l reports/sram22-wrappers-yosys-elaboration.log
+          -p 'read_verilog -sv rtl/lca_sram22_macros.sv; prep -top lca_sram22_128x32; check'
+      - name: Macro-backed secure SRAM independent Yosys elaboration
+        run: >-
+          node --experimental-wasm-exnref tools/run_yosys.mjs
+          -l reports/secure-sram-sram22-yosys-elaboration.log
+          -p 'read_verilog -sv rtl/lca_sram22_macros.sv rtl/lca_secure_sram_sram22.sv; prep -top lca_secure_sram_sram22; check'
       - name: Rev-A core independent Yosys elaboration
         run: >-
           node --experimental-wasm-exnref tools/run_yosys.mjs
